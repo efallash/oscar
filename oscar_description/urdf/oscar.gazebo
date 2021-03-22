@@ -2,7 +2,9 @@
 <!-- Gazebo plugins and properties for OSCAR robot -->
 
   <!-- Control plugin --> 
-  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  </gazebo>
 
   <!-- Depth Camera Plugin -->
   <gazebo reference="depth_camera_link">
@@ -16,7 +18,7 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <near>0.3</near>
+          <near>0.03</near>
           <far>2000</far>
         </clip>
         <noise>

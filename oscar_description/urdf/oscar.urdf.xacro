@@ -67,61 +67,6 @@
   </link>
 
 
-  <!-- Call thor xacro macro 
-  <link
-    name="left_arm">
-    <inertial>
-      <origin
-        xyz="0.079376 0.0040006 0.15278"
-        rpy="0 0 0" />
-      <mass
-        value="5.8547" />
-      <inertia
-        ixx="0.0070709"
-        ixy="-7.4198E-05"
-        ixz="-4.5271E-06"
-        iyy="0.011734"
-        iyz="1.6122E-06"
-        izz="0.013094" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://robot_description/meshes/left_arm.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.75294 0.75294 0.75294 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://robot_description/meshes/left_arm.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="left_arm_fixed"
-    type="fixed">
-    <origin
-      xyz="0 0.25 0.7"
-      rpy="0 0 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="left_arm" />
-    <axis
-      xyz="0 0 0" />
-  </joint>
-  -->
 
   <!-- Left arm xacro call and joint -->
   <xacro:thor_robot prefix="left_arm_"/>
@@ -156,67 +101,6 @@
       xyz="0 0 0" />
   </joint>
   
-
-
-
-
-  <!-- Call thor xacro macro 
-  <link
-    name="right_arm">
-    <inertial>
-      <origin
-        xyz="0.079376 0.0040006 0.15278"
-        rpy="0 0 0" />
-      <mass
-        value="5.8547" />
-      <inertia
-        ixx="0.0070709"
-        ixy="-7.4198E-05"
-        ixz="-4.5272E-06"
-        iyy="0.011734"
-        iyz="1.6122E-06"
-        izz="0.013094" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://robot_description/meshes/right_arm.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.75294 0.75294 0.75294 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://robot_description/meshes/right_arm.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="right_arm_fixed"
-    type="fixed">
-    <origin
-      xyz="0 -0.25 0.7"
-      rpy="0 0 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="right_arm" />
-    <axis
-      xyz="0 0 0" />
-  </joint>
-  -->
-
-
 
   <!-- depth camera -->  
   <link

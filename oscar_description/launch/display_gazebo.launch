@@ -22,12 +22,10 @@
   <param name="robot_description" command="$(find xacro)/xacro $(arg model) " />
 
 
+
+  <!--
   <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher"/>
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-
-
-
-
+  -->
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node
@@ -40,7 +38,7 @@
   
 
   <!--<param name="use_gui" value="$(arg gui)" />-->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find oscar_description)/rviz/urdf.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find oscar_description)/rviz/urdf_gazebo.rviz" />
 
 
 </launch>

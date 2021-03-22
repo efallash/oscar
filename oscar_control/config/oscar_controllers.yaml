@@ -1,0 +1,119 @@
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+#Left arm
+left_arm_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - left_arm_Art1_Yaw
+      - left_arm_Art2_Pitch
+      - left_arm_Art3_Pitch
+      - left_arm_Art4_Yaw
+      - left_arm_Art5_Pitch
+      - left_arm_Art6_Yaw
+
+    constraints:
+      goal_time: 0.1
+      stopped_velocity_tolerance: 0.01
+      left_arm_Art1_Yaw:
+        goal: &goal_pos_constraint 0.02 # Uno 1% de error en un goal de pi/2
+        trajectory: &trajectory_pos_constraint 0.05
+      left_arm_Art2_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      left_arm_Art3_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      left_arm_Art4_Yaw:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      left_arm_Art5_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      left_arm_Art6_Yaw:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+
+    gains:
+      left_arm_Art1_Yaw: {p: 100, i: 1, d: 1, i_clamp: 100}
+
+      left_arm_Art2_Pitch: {p: 300, i: 3.5, d: 1, i_clamp: 100}
+
+      left_arm_Art3_Pitch: {p: 150, i: 1, d: 1, i_clamp: 100}
+
+      left_arm_Art4_Yaw: {p: 100, i: 1, d: 0, i_clamp: 1}
+
+      left_arm_Art5_Pitch: {p: 100, i: 1, d: 0, i_clamp: 100}
+
+      left_arm_Art6_Yaw: {p: 10, i: 0.1, d: 0, i_clamp: 100}
+
+left_gripper_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - left_arm_finger1_prismatic 
+      - left_arm_finger2_prismatic
+    gains: # Required because we're controlling an effort interface
+      left_arm_finger1_prismatic : {p: 300,  d: 0.1, i: 10, i_clamp: 0.25, antiwindup: true}
+      left_arm_finger2_prismatic : {p: 300,  d: 0.1, i: 10, i_clamp: 0.25, antiwindup: true}
+
+#Right arm
+right_arm_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - right_arm_Art1_Yaw
+      - right_arm_Art2_Pitch
+      - right_arm_Art3_Pitch
+      - right_arm_Art4_Yaw
+      - right_arm_Art5_Pitch
+      - right_arm_Art6_Yaw
+
+    constraints:
+      goal_time: 0.1
+      stopped_velocity_tolerance: 0.01
+      right_arm_Art1_Yaw:
+        goal: *goal_pos_constraint  
+        trajectory: *trajectory_pos_constraint 
+      right_arm_Art2_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      right_arm_Art3_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      right_arm_Art4_Yaw:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      right_arm_Art5_Pitch:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      right_arm_Art6_Yaw:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+
+    gains:
+      right_arm_Art1_Yaw: {p: 100, i: 1, d: 1, i_clamp: 100}
+
+      right_arm_Art2_Pitch: {p: 300, i: 3.5, d: 1, i_clamp: 100}
+
+      right_arm_Art3_Pitch: {p: 150, i: 1, d: 1, i_clamp: 100}
+
+      right_arm_Art4_Yaw: {p: 100, i: 1, d: 0, i_clamp: 1}
+
+      right_arm_Art5_Pitch: {p: 100, i: 1, d: 0, i_clamp: 100}
+
+      right_arm_Art6_Yaw: {p: 10, i: 0.1, d: 0, i_clamp: 100}
+
+
+
+
+
+
+right_gripper_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - right_arm_finger1_prismatic 
+      - right_arm_finger2_prismatic
+    gains: # Required because we're controlling an effort interface
+      right_arm_finger1_prismatic : {p: 300,  d: 0.1, i: 10, i_clamp: 0.25, antiwindup: true}
+      right_arm_finger2_prismatic : {p: 300,  d: 0.1, i: 10, i_clamp: 0.25, antiwindup: true}       
+      

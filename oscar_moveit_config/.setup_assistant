@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: oscar_description
+    relative_path: urdf/oscar.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/oscar.srdf
+  CONFIG:
+    author_name: Emanuel Fallas
+    author_email: efallashdez@gmail.com
+    generated_timestamp: 1616435783

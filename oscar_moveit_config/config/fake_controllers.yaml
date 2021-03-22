@@ -1,0 +1,34 @@
+controller_list:
+  - name: fake_left_arm_controller
+    joints:
+      - left_arm_Art1_Yaw
+      - left_arm_Art2_Pitch
+      - left_arm_Art3_Pitch
+      - left_arm_Art4_Yaw
+      - left_arm_Art5_Pitch
+      - left_arm_Art6_Yaw
+  - name: fake_right_arm_controller
+    joints:
+      - right_arm_Art1_Yaw
+      - right_arm_Art2_Pitch
+      - right_arm_Art3_Pitch
+      - right_arm_Art4_Yaw
+      - right_arm_Art5_Pitch
+      - right_arm_Art6_Yaw
+  - name: fake_left_gripper_controller
+    joints:
+      - left_arm_finger1_prismatic
+      - left_arm_finger2_prismatic
+  - name: fake_right_gripper_controller
+    joints:
+      - right_arm_finger1_prismatic
+      - right_arm_finger2_prismatic
+initial:  # Define initial robot poses.
+  - group: left_arm
+    pose: upright_left
+  - group: right_arm
+    pose: upright_right
+  - group: left_gripper
+    pose: left_closed
+  - group: right_gripper
+    pose: right_closed
