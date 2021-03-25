@@ -191,7 +191,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_description/meshes/rgb_camera_link.STL" />
+          filename="package://oscar_description/meshes/rgb_camera_link.STL" />
       </geometry>
       <material
         name="">
@@ -205,7 +205,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_description/meshes/rgb_camera_link.STL" />
+          filename="package://oscar_description/meshes/rgb_camera_link.STL" />
       </geometry>
     </collision>
   </link>
