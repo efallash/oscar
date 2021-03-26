@@ -20,6 +20,10 @@
       <pose>0.25 0.5 0.785 0 0 0</pose>
     </include>
     
+     <include>
+      <uri>model://object</uri>
+      <pose>0.25 0 0.85 0 0 0</pose>
+    </include>
 
   </world>
 </sdf>

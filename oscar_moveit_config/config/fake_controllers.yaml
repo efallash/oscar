@@ -25,10 +25,10 @@ controller_list:
       - right_arm_finger2_prismatic
 initial:  # Define initial robot poses.
   - group: left_arm
-    pose: upright_left
+    pose: upright
   - group: right_arm
-    pose: upright_right
+    pose: upright
   - group: left_gripper
-    pose: left_closed
+    pose: closed
   - group: right_gripper
-    pose: right_closed
+    pose: closed
