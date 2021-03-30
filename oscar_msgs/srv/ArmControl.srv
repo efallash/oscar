@@ -1,9 +1,8 @@
-#Message to control an arm to a position and control the gripper
+#Message to control an arm to a position in the xyz space
 int32 x
 int32 y
 int32 z #Only three posible values: 0 grab height (z=0.8); 1 medium height (z=0.9); 2 high height (z=1)
-bool close #Option to close the gripper
 ---
 bool plan #Planning success
 bool exec #Execution success
-bool object #Detected object in the gripper
+
