@@ -6,11 +6,26 @@ from future import standard_library
 
 import sys, rospy, tf, moveit_commander, random
 from geometry_msgs.msg import Pose, Point, Quaternion
+from gazebo_msgs.srv import SetModelState, SetModelStateRequest, SetModelStateResponse
 from math import pi
 
 #from thor_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse 
 
 #Script to pick a box, go to home position and place it in its original position
+
+#Wait for gazebo
+rospy.wait_for_service("gazebo/set_model_state")
+move_object=rospy.ServiceProxy("gazebo/set_model_state", SetModelState)
+
+
+#Object Pick Pose
+obj_orient = Quaternion(*tf.transformations.quaternion_from_euler(0, 0, 0))
+obj_pose = Pose(Point( 0.4, -0.35, 0.801), obj_orient)
+#Object move service request
+move_obj_msg=SetModelStateRequest()
+move_obj_msg.model_state.model_name="object"
+move_obj_msg.model_state.reference_frame="world"
+move_obj_msg.model_state.pose=obj_pose
 
 
 #End effector orientations
@@ -21,8 +36,8 @@ orient2 = Quaternion(*tf.transformations.quaternion_from_euler(0, pi/4, -pi/4))
 #Predefined poses for the end effector
 pose_pick = Pose(Point( 0.4, -0.35, 0.8), orient)
 pose_place = Pose(Point( 0.25, 0, 0.801), orient1)
-pose_pick_left = Pose(Point( 0.25, 0, 0.801), orient2)
-pose_place_left = Pose(Point( 0.4, 0.35, 0.8), orient)
+pose_pick_left = Pose(Point( 0.25, 0, 0.8), orient2)
+pose_place_left = Pose(Point( 0.4, 0.35, 0.801), orient)
 
 #Predefined poses for the end effector
 pose_pre_pick = Pose(Point( 0.4, -0.35, 0.9), orient)
@@ -44,7 +59,10 @@ right_gripper = moveit_commander.MoveGroupCommander("right_gripper")
 left_gripper = moveit_commander.MoveGroupCommander("left_gripper")
 robot = moveit_commander.RobotCommander()
 
-
+#Move Object
+rospy.loginfo("Moving Object")
+move_obj_resp=move_object(move_obj_msg)
+print(move_obj_resp.status_message)
 
 #Home Right
 rospy.loginfo("Going Upright")    

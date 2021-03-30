@@ -147,7 +147,7 @@
     name="depth_camera_fixed"
     type="fixed">
     <origin
-      xyz="0.092973 0 1.303"
+      xyz="0.092973 0 1.703"
       rpy="0 1.0734 0" />
     <parent
       link="base_link" />
