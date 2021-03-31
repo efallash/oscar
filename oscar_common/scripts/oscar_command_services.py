@@ -5,10 +5,12 @@
 from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 
-import sys, rospy, tf, moveit_commander, random
+import sys, rospy, moveit_commander
+from geometry_msgs.msg import Pose, Point, Quaternion
+import tf
 import rospy
 import numpy as np
-
+from math import pi
 
 #Service servers to command OSCAR's arms
 
@@ -47,16 +49,36 @@ class oscar_command:
     def left_arm_callback(self,req):
         rospy.loginfo("left_arm_callback")
 
+        #Call the commander function
+        plan, execute= self.arm_command(req, self.left_arm, "left_arm")
+
+        # Response message
+        res=ArmControlResponse()
+        res.plan=plan
+        res.execute=execute
+        
+        return res
+
+
     def right_arm_callback(self,req):
         rospy.loginfo("right_arm_callback")
 
+        #Call the commander function
+        plan, execute = self.arm_command(req, self.right_arm, "right_arm")
 
+        # Response message
+        res=ArmControlResponse()
+        res.plan=plan
+        res.execute=execute
 
+        return res
 
     def left_gripper_callback(self,req):
         rospy.loginfo("Left Gripper Service Called")
         # Instantiate the response message object.
-        res = self.gripper_control(req, self.left_gripper)
+        res= self.gripper_control(req, self.left_gripper)
+    
+        
         return res
         
 
@@ -64,16 +86,95 @@ class oscar_command:
         rospy.loginfo("Right Gripper Service Called")
         # Instantiate the response message object.
         res = self.gripper_control(req, self.right_gripper)
+
+        
         return res
 
 
+    #Commands the arm to a xyz position with simple orientation estimation for the end effector
     def arm_command(self, req, group, arm_frame):
-        pass
+
+
+
+        #Defining target position relative to the arm base
+        arm_x=req.x
+        if arm_frame=="left_arm":
+            arm_y=req.y-0.25 #Static transform from the left arm and world
+        elif arm_frame=="right_arm":
+            arm_y=req.y+0.25 #Static transform from the right arm and world
+        #In case of non existant arm_frame
+        else:
+            rospy.logerr("Wrong arm frame")
+            return (False,False)
+
+        
+        #Get object azimuth angle respect to the arm
+        if req.x==0:
+            rospy.logerr("Error: Impossible to obtain x=0 position")
+            return (False,False)
+        else:
+            yaw=np.arctan(arm_y/arm_x)
+
+
+        #List of pitches to plan
+        pitch_list=np.flip(np.linspace(0,pi/2, num=9))
+
+        #Set planning time
+        group.set_planning_time(0.15) #Fast Timeout
+
+
+        #Attempt planning for every pitch angle
+        plan_success=False
+        exec_success=False
+        
+
+        '''
+        #Debug
+        # We can get the name of the reference frame for this robot:
+        planning_frame = group.get_planning_frame()
+        print("============ Reference frame: %s", planning_frame)
+
+        # We can also print the name of the end-effector link for this group:
+        eef_link = group.get_end_effector_link()
+        print("============ End effector: %s", eef_link)
+        '''
+
+
+        for pitch in pitch_list:
+          #Build pose message
+          target_pose=Pose(Point(req.x,req.y,req.z),Quaternion(*tf.transformations.quaternion_from_euler(0, pitch, yaw)))
+          
+          '''
+          #Debug
+          print(target_pose.position)
+          print("Pitch")
+          print(pitch)          
+          print("Yaw")          
+          print(yaw)
+          '''
+
+          #Plan Pose
+          group.set_pose_target(target_pose)
+          rospy.loginfo("Planing")
+          plan=group.plan()
+          #If planning was successfull, exectute trajectory
+          if plan.joint_trajectory.points:              
+              plan_success=True
+              rospy.loginfo("Executing Pose")
+              exec_success=group.execute(plan,wait=True)
+              break
+
+
+        return(plan_success,exec_success)
+
+
+
+
 
 
    
     def gripper_control(self,req,group):
-        rospy.loginfo('Close Gripper Service Called.')
+        rospy.loginfo('Commanding gripper...')
 
 
         # Instantiate the response message object.
@@ -85,7 +186,7 @@ class oscar_command:
           res= not group.go(wait=True) #Negated because failure in the go function means some object stopped the gripper
         else:
           group.set_named_target("open")
-          res=group.go(wait=True)
+          res= not group.go(wait=True)  #Negated because failure in the go function means some object stopped the gripper
                 
 
 

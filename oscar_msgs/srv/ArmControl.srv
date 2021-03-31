@@ -1,8 +1,9 @@
 #Message to control an arm to a position in the xyz space
-int32 x
-int32 y
-int32 z #Only three posible values: 0 grab height (z=0.8); 1 medium height (z=0.9); 2 high height (z=1)
+float32 x
+float32 y
+float32 z #Only three posible values: 0 grab height (z=0.8); 1 medium height (z=0.9); 2 high height (z=1)
+string named_pose #Use to override position and go to a named pose. E.g., "home"
 ---
 bool plan #Planning success
-bool exec #Execution success
+bool execute #Execution success
 
