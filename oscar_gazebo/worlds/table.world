@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
-  <world name="default">
+  <world name="table_world">
     <!-- A global light source -->
     <include>
       <uri>model://sun</uri>
@@ -21,9 +21,15 @@
     </include>
     
      <include>
-      <uri>model://object</uri>
-      <pose>0.25 0 0.85 0 0 0</pose>
-    </include>
-
+      <uri>model://red_box</uri>
+      <pose>0.5 0 0.85 0 0 0</pose>
+     </include>
+      
+      
+     <include>
+      <uri>model://basket</uri>
+      <pose>0.25 0 0.78 0 0 0</pose>
+     </include>
+    
   </world>
 </sdf>

@@ -1,25 +1,21 @@
 <?xml version='1.0'?>
 <sdf version ='1.5'>
   <model name ='object'>
-    <static>false</static>
     <link name ='link'>
       <inertial>
         <mass>0.05</mass>
         <inertia>
-          <ixx>8.61979E-6</ixx>
+          <ixx>5.20833E-6</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
-          <iyy>8.61979E-6</iyy>
+          <iyy>5.20833E-6</iyy>
           <iyz>0</iyz>
-          <izz>3.90625E-6</izz>
+          <izz>5.20833E-6</izz>
         </inertia>
       </inertial>
       <collision name="collision">
         <geometry>
-          <cylinder>
-            <radius>0.0125</radius>
-            <length>0.025</length>
-          </cylinder>
+          <box><size>0.025 0.025 0.025</size></box>
         </geometry>
         <surface>
           <friction>
@@ -40,10 +36,7 @@
       </collision>
       <visual name="visual">
         <geometry>
-          <cylinder>
-            <radius>0.0125</radius>
-            <length>0.04</length>
-          </cylinder>
+          <box><size>0.025 0.025 0.025</size></box>
         </geometry>
         <material> 
           <ambient>1 0 0 1</ambient>
@@ -52,6 +45,6 @@
           <emissive>0 0 0 1</emissive>
         </material>
       </visual>
-    </link>
+    </link> 
   </model>
 </sdf>

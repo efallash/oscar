@@ -6,10 +6,10 @@
       <inertial>
         <mass>0.05</mass>
         <inertia>
-          <ixx>8.61979E-6</ixx>
+          <ixx>4.55729E-6</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
-          <iyy>8.61979E-6</iyy>
+          <iyy>4.55729E-6</iyy>
           <iyz>0</iyz>
           <izz>3.90625E-6</izz>
         </inertia>
@@ -42,7 +42,7 @@
         <geometry>
           <cylinder>
             <radius>0.0125</radius>
-            <length>0.04</length>
+            <length>0.025</length>
           </cylinder>
         </geometry>
         <material> 
