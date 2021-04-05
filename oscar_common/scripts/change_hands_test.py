@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Python 2 compatibility imports
 from __future__ import absolute_import, division, print_function
@@ -58,6 +58,9 @@ left = moveit_commander.MoveGroupCommander("left_arm")
 right_gripper = moveit_commander.MoveGroupCommander("right_gripper")
 left_gripper = moveit_commander.MoveGroupCommander("left_gripper")
 robot = moveit_commander.RobotCommander()
+
+#Set Velocity
+right.set_max_velocity_scaling_factor(1)
 
 #Move Object
 rospy.loginfo("Moving Object")

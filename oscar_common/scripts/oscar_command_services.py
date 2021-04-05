@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This code has been adapted from the ROS Wiki ROS Service tutorials and the HRWROS MOOC
 # (http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)
 
@@ -128,38 +128,19 @@ class oscar_command:
         exec_success=False
         
 
-        '''
-        #Debug
-        # We can get the name of the reference frame for this robot:
-        planning_frame = group.get_planning_frame()
-        print("============ Reference frame: %s", planning_frame)
-
-        # We can also print the name of the end-effector link for this group:
-        eef_link = group.get_end_effector_link()
-        print("============ End effector: %s", eef_link)
-        '''
-
 
         for pitch in pitch_list:
           #Build pose message
           target_pose=Pose(Point(req.x,req.y,req.z),Quaternion(*tf.transformations.quaternion_from_euler(0, pitch, yaw)))
           
-          '''
-          #Debug
-          print(target_pose.position)
-          print("Pitch")
-          print(pitch)          
-          print("Yaw")          
-          print(yaw)
-          '''
 
           #Plan Pose
           group.set_pose_target(target_pose)
           rospy.loginfo("Planing")
-          plan=group.plan()
+          plan_success,plan,*_ = group.plan()
+          
           #If planning was successfull, exectute trajectory
-          if plan.joint_trajectory.points:              
-              plan_success=True
+          if plan_success:              
               rospy.loginfo("Executing Pose")
               exec_success=group.execute(plan,wait=True)
               break
