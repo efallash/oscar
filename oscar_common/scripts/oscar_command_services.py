@@ -94,6 +94,18 @@ class oscar_command:
     #Commands the arm to a xyz position with simple orientation estimation for the end effector
     def arm_command(self, req, group, arm_frame):
 
+        #Check if velocity command is in allowed values
+        if req.vel>0 and req.vel<=1:
+            group.set_max_velocity_scaling_factor(req.vel)
+        
+        if len(req.named_pose)>0 :
+            group.set_named_target(req.named_pose)
+            plan_success,plan,*_ = group.plan()
+            exec_success=False
+            if plan_success:              
+              rospy.loginfo("Executing Pose")
+              exec_success=group.execute(plan,wait=True)
+            return(plan_success,exec_success)
 
 
         #Defining target position relative to the arm base
@@ -178,7 +190,7 @@ class oscar_command:
     
 
 if __name__ == "__main__":
-    rospy.init_node('gripper_control_server', anonymous = False)
+    rospy.init_node('oscar_command_server', anonymous = False)
     server=oscar_command()
     rospy.spin()
 

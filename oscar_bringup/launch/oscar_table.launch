@@ -8,6 +8,8 @@
   <arg name="debug" default="false"/>
   <arg name="verbose" default="false"/>
 
+  <arg name="controller_number" default="0"/>
+
 
   <!-- Launch OSCAR in the table world-->
   <include file="$(find oscar_gazebo)/launch/table_world.launch">
@@ -20,12 +22,17 @@
   </include>
 
   <!-- Start controllers -->
-  <include file="$(find oscar_control)/launch/oscar_control.launch"/>
+  <include file="$(find oscar_control)/launch/oscar_control.launch">
+    <arg name="controller_num" value="$(arg controller_number)"/>
+  </include>
 
   <!-- Launch moveit -->
    <include file="$(find oscar_moveit_config)/launch/move_group.launch"/>
 
 
+  <!-- Commanding Services -->
+  <node name="oscar_command_server" pkg="oscar_common"
+    type="oscar_command_services.py"/>
 
 
 

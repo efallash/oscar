@@ -1,7 +1,9 @@
 <launch>
+  <!--Select controller number-->
+  <arg name="controller_num" default="0"/>
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find oscar_control)/config/oscar_controllers.yaml" command="load"/>
+  <rosparam file="$(find oscar_control)/config/oscar_controllers$(arg controller_num).yaml" command="load"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"

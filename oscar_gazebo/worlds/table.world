@@ -2,9 +2,24 @@
 <sdf version="1.5">
   <world name="table_world">
     <!-- A global light source -->
-    <include>
-      <uri>model://sun</uri>
-    </include>
+    <light name='user_spot_light_0' type='spot'>
+      <pose>0.5 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0 0 -1</direction>
+      <attenuation>
+        <range>20</range>
+        <constant>0.0</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <cast_shadows>0</cast_shadows>
+      <spot>
+        <inner_angle>0.6</inner_angle>
+        <outer_angle>1</outer_angle>
+        <falloff>1</falloff>
+      </spot>
+    </light>
     <!-- A ground plane -->
     <include>
       <uri>model://ground_plane</uri>
