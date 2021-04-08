@@ -22,6 +22,7 @@ move_object=rospy.ServiceProxy("gazebo/set_model_state", SetModelState)
 #Wait command services
 rospy.wait_for_service("close_right_gripper") #This is the last service to be spawned in oscar_command_services.py
 
+#Arm and gripper commanders
 right_arm=rospy.ServiceProxy("right_arm_command", ArmControl)
 left_arm=rospy.ServiceProxy("left_arm_command", ArmControl)
 right_gripper=rospy.ServiceProxy("close_right_gripper", GripperControl)

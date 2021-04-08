@@ -1,0 +1,53 @@
+<launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+
+  <!-- gazebo arguments -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="false"/>
+
+  <!--Experiment factors-->
+  <arg name="controller" default="0"/>
+  <arg name="load" default="0.001"/>
+  <arg name="velocity" default="0.1"/>
+
+
+  <!-- Launch OSCAR with the experiment parameters-->
+  <include file="$(find oscar_bringup)/launch/oscar_table.launch">
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
+
+    <arg name="controller_number" value="$(arg controller)"/>
+    <arg name="load" value="true"/>
+    <arg name="mass" value="$(arg load)"/>
+  </include>
+
+  <!-- Start test script node -->
+  <node name="oscar_pose_test" pkg="oscar_tests" type="pose_test.py" output="screen">
+
+    <param name="controller" value="$(arg controller)" />
+    <param name="load" value="$(arg load)" />
+    <param name="velocity" value="$(arg velocity)" />
+
+  </node>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</launch>

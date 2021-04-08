@@ -20,23 +20,7 @@
     <arg name="verbose" value="$(arg verbose)"/>
   </include>
 
-  <!-- arguments for the urdf xacro file, rviz visualization and namespace -->
-  <arg name="model" default="$(find oscar_description)/urdf/oscar.urdf.xacro"/>
-  <param name="robot_description" command="$(find xacro)/xacro $(arg model) " />
-
-
-
-  <!--
-  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher"/>
-  -->
-
-  <!-- push robot_description to factory and spawn robot in gazebo -->
-  <node
-    name="spawn_model"
-    pkg="gazebo_ros"
-    type="spawn_model"
-    args="-urdf -model oscar -param robot_description"
-    output="screen" />
+  
 
 
 </launch>

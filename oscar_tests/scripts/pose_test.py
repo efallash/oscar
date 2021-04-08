@@ -4,14 +4,14 @@
 from __future__ import absolute_import, division, print_function
 from future import standard_library
 
-import sys, rospy, tf, tf2_ros, moveit_commander, random
+import sys, rospy, tf, tf2_ros, moveit_commander, random, rospkg
 import pandas as pd
 import numpy as np
 from geometry_msgs.msg import Pose, Point, Quaternion, TransformStamped
 from math import pi
 
 #Model delete service
-from gazebo_msgs.srv import DeleteModel
+from gazebo_msgs.srv import DeleteModel, GetPhysicsProperties, GetPhysicsPropertiesResponse, SetPhysicsProperties, SetPhysicsPropertiesRequest
 
  #Oscar Command services
 from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
@@ -25,6 +25,18 @@ def pose_test():
     #Start Node
     rospy.init_node('oscar_pose_test',anonymous=True)
 
+    #Speed up gazebo simulation
+    rospy.loginfo("Accelerating World")
+    rospy.wait_for_service("gazebo/set_physics_properties")
+    rospy.wait_for_service("gazebo/get_physics_properties")
+    get_physics=rospy.ServiceProxy("gazebo/get_physics_properties", GetPhysicsProperties)
+    set_physics=rospy.ServiceProxy("gazebo/set_physics_properties", SetPhysicsProperties)
+    physics=get_physics()
+    fast_physics=SetPhysicsPropertiesRequest(physics.time_step,0,physics.gravity,physics.ode_config)
+    set_physics(fast_physics)
+
+
+
 
     #Delete Objects
     rospy.loginfo("Deleting objects")
@@ -35,14 +47,16 @@ def pose_test():
     gazebo_delete('button')
 
     #Get experiment parameters
-    '''
-    controller = rospy.get_param('~controller')
-    velocity = rospy.get_param('~velocity')
-    load = rospy.get_param('~load')
-    '''
-    controller = 0
-    velocity = 1
-    load = 0
+
+    try:
+        controller = rospy.get_param('~controller')
+        velocity = rospy.get_param('~velocity')
+        load = rospy.get_param('~load')
+    except KeyError:
+        rospy.logfatal("Experiment parameters not set")
+        controller = 0
+        velocity = 1
+        load = 0
 
     #Wait command services
     rospy.wait_for_service("close_right_gripper") #This is the last service to be spawned in oscar_command_services.py
@@ -72,9 +86,9 @@ def pose_test():
     z_max=1.325
 
     #Resolution of the experiment
-    x_divide=3
-    y_divide=3
-    z_divide=3
+    x_divide=11
+    y_divide=35
+    z_divide=11
 
 
     
@@ -135,7 +149,7 @@ def pose_test():
         group[gr_index](0,0,0,1,"home")
         
         
-        #Result format: [Setpoint_x,Setpoint_y,Setpoint_z,plan_success, exec_success,reached_x,reached_y,reached_z, error]
+        #Result format: [Arm_name,Setpoint_x,Setpoint_y,Setpoint_z,plan_success, exec_success,reached_x,reached_y,reached_z, error]
         
         for i in poses:
             result=[]
@@ -146,14 +160,17 @@ def pose_test():
             rospy.loginfo("Sending target")
             command_output=group[gr_index](target_pose)
             
+            if gr_index == 0:
+                    arm_name="right_arm_gripper_link"
+                    arm_result="right"
+            else:
+                arm_name="left_arm_gripper_link"
+                arm_result="left"
 
             #If planning was successful, get final pose
             if command_output.plan: 
                 rospy.loginfo("Successful Plan")
-                if gr_index == 0:
-                    arm_name="right_arm_gripper_link"
-                else:
-                    arm_name="left_arm_gripper_link"
+                
 
                 #Get the effector position
                 eff_pos= tfBuffer.lookup_transform('world', arm_name, rospy.Time())
@@ -162,13 +179,13 @@ def pose_test():
 
                 error=np.sqrt( np.square(eff_pos.x-i[0]) + np.square(eff_pos.y-i[1]) + np.square(eff_pos.z-i[2]) )
 
-                result=[i[0],i[1],i[2],True,command_output.execute,eff_pos.x,eff_pos.y,eff_pos.z, error]
+                result=[arm_result,i[0],i[1],i[2],True,command_output.execute,eff_pos.x,eff_pos.y,eff_pos.z, error]
                 
                 
 
             else:
                 rospy.loginfo("Failed Plan")
-                result=[i[0],i[1],i[2],False,False,0,0,0,0]
+                result=[arm_result,i[0],i[1],i[2],False,False,0,0,0,0]
 
             #Store Results
             rospy.loginfo("Storing Result")
@@ -183,9 +200,13 @@ def pose_test():
 
     rospy.loginfo("Saving Results")
     results_df=pd.DataFrame(results,
-        columns=["x_set","y_set","z_set","plan","execute","x_final","y_final","z_final","error"])
+        columns=["arm","x_set","y_set","z_set","plan","execute","x_final","y_final","z_final","error"])
+    #Search the tests package
+    rospack= rospkg.RosPack()
 
-    results_df.to_csv(f'exp_cont{controller}_vel{velocity}_load_{load}.csv', index=False)
+    pkg_path= rospack.get_path('oscar_tests')
+
+    results_df.to_csv(pkg_path+'/results/pose_test/'+f'exp_cont{controller}_vel{velocity}_load{load}.csv', index=False)
           
 
     

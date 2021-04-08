@@ -132,7 +132,7 @@ class oscar_command:
         pitch_list=np.flip(np.linspace(0,pi/2, num=9))
 
         #Set planning time
-        group.set_planning_time(0.15) #Fast Timeout
+        group.set_planning_time(0.05) #Fast Timeout
 
 
         #Attempt planning for every pitch angle
@@ -151,7 +151,7 @@ class oscar_command:
           rospy.loginfo("Planing")
           plan_success,plan,*_ = group.plan()
           
-          #If planning was successfull, exectute trajectory
+          #If planning was successfull, execute trajectory
           if plan_success:              
               rospy.loginfo("Executing Pose")
               exec_success=group.execute(plan,wait=True)
