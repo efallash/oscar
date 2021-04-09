@@ -4,6 +4,8 @@
 from __future__ import absolute_import, division, print_function
 from future import standard_library
 
+from datetime import datetime
+
 import sys, rospy, tf, tf2_ros, moveit_commander, random, rospkg
 import pandas as pd
 import numpy as np
@@ -24,6 +26,10 @@ def pose_test():
     
     #Start Node
     rospy.init_node('oscar_pose_test',anonymous=True)
+
+    #Log start
+    now=datetime.now()
+    rospy.loginfo("Start Time: "+str(now))
 
     #Speed up gazebo simulation
     rospy.loginfo("Accelerating World")
@@ -79,15 +85,18 @@ def pose_test():
     x_min=0.1
     x_max=0.625
     #y axis (Uses negative values to explore right and left sides of the robot)
-    y_min=-0.875
-    y_max=0.875
+    y_min_right=-0.875
+    y_max_right=0.375
+    y_min_left=-0.375
+    y_max_left=0.875
+
     #z_axis 
     z_min=0.8
     z_max=1.325
 
     #Resolution of the experiment
     x_divide=11
-    y_divide=35
+    y_divide=13
     z_divide=11
 
 
@@ -98,30 +107,39 @@ def pose_test():
     x_points=np.linspace(x_min,x_max, num=x_divide)
 
     
-    y_points=np.linspace(y_min,y_max, num=y_divide)
-    #Using only y=0
-    #y_points=[0]
+    y_points_right=np.linspace(y_min_right,y_max_right, num=y_divide)
+    y_points_left=np.linspace(y_min_left,y_max_left, num=y_divide)
+
 
     z_points=np.linspace(z_min,z_max, num=z_divide)
         
-    poses=[]
+    poses_right=[]
+    poses_left=[]
     
     
 
      
     #Generate a list of all the poses of the experiment
     for x in x_points:
-        for y in y_points:
+        for y in y_points_right:
             for z in z_points:
                 #Create a pose in the x,y,z format
                 pose=[x, y, z]
                 #Append the pose to the list of poses                    
-                poses.append(pose)
+                poses_right.append(pose)
+    for x in x_points:
+        for y in y_points_left:
+            for z in z_points:
+                #Create a pose in the x,y,z format
+                pose=[x, y, z]
+                #Append the pose to the list of poses                    
+                poses_left.append(pose)
 
 
 
     #Shuffle of the poses to avoid bias in the experiment
-    random.shuffle(poses)
+    random.shuffle(poses_right)
+    random.shuffle(poses_left)
 
     results=[]
 
@@ -142,13 +160,20 @@ def pose_test():
     tfBuffer = tf2_ros.Buffer()
     listener = tf2_ros.TransformListener(tfBuffer)
 
-    for gr_index in [0,1]:
+    for gr_index in [0,1]: #For each arm
 
         #Start in home
         rospy.loginfo("Going Home")    
         group[gr_index](0,0,0,1,"home")
         
-        
+        if gr_index == 0:
+            arm_name="right_arm_gripper_link"
+            arm_result="right"
+            poses=poses_right
+        else:
+            arm_name="left_arm_gripper_link"
+            arm_result="left"
+            poses=poses_left
         #Result format: [Arm_name,Setpoint_x,Setpoint_y,Setpoint_z,plan_success, exec_success,reached_x,reached_y,reached_z, error]
         
         for i in poses:
@@ -160,12 +185,7 @@ def pose_test():
             rospy.loginfo("Sending target")
             command_output=group[gr_index](target_pose)
             
-            if gr_index == 0:
-                    arm_name="right_arm_gripper_link"
-                    arm_result="right"
-            else:
-                arm_name="left_arm_gripper_link"
-                arm_result="left"
+            
 
             #If planning was successful, get final pose
             if command_output.plan: 
@@ -207,7 +227,10 @@ def pose_test():
     pkg_path= rospack.get_path('oscar_tests')
 
     results_df.to_csv(pkg_path+'/results/pose_test/'+f'exp_cont{controller}_vel{velocity}_load{load}.csv', index=False)
-          
+
+    #Log finish time
+    now=datetime.now()
+    rospy.loginfo("Finish Time: "+str(now))   
 
     
 
