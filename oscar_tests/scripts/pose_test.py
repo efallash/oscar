@@ -15,7 +15,7 @@ from math import pi
 #Model delete service
 from gazebo_msgs.srv import DeleteModel, GetPhysicsProperties, GetPhysicsPropertiesResponse, SetPhysicsProperties, SetPhysicsPropertiesRequest
 
- #Oscar Command services
+#Oscar Command services
 from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 

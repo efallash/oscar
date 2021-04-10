@@ -9,7 +9,7 @@
   <arg name="verbose" default="false"/>
 
   <!--Controller selection argument-->
-  <arg name="controller_number" default="0"/>
+  <arg name="controller_number" default="1"/>
 
   <!-- Option to include a fixed load in the grippers-->
   <arg name="load" default="false"/>
