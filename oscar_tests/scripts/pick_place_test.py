@@ -160,9 +160,9 @@ def pose_test():
 
         #Load run parameters
         if vel==1:
-            velocity=1
+            velocity=0.1
         elif vel==-1:
-            velocity=0.5
+            velocity=0.02
         else:
             rospy.logfatal("Incorrect velocity factor")
 

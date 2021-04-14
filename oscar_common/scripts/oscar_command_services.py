@@ -97,6 +97,8 @@ class oscar_command:
         #Check if velocity command is in allowed values
         if req.vel>0 and req.vel<=1:
             group.set_max_velocity_scaling_factor(req.vel)
+        else:
+            rospy.logerr("Wrong Velocity Factor")
         
         if len(req.named_pose)>0 :
             group.set_named_target(req.named_pose)
