@@ -17,7 +17,6 @@ from math import pi
 from gazebo_msgs.srv import DeleteModel,SpawnModel 
 from gazebo_msgs.srv import GetPhysicsProperties, GetPhysicsPropertiesResponse, SetPhysicsProperties, SetPhysicsPropertiesRequest
 from gazebo_msgs.srv import SetModelState, SetModelStateRequest, SetModelStateResponse
-from gazebo_msgs.srv import SetModelState, SetModelStateRequest, SetModelStateResponse
 from gazebo_msgs.srv import GetModelState, GetModelStateRequest, GetModelStateResponse
 
 #Oscar Command services
@@ -26,7 +25,7 @@ from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControl
 
 #Script to test different pick and place conditions and record the results
 
-def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
+def pose_test():
 
     
     #Start Node
@@ -96,7 +95,7 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
     basket_default=SetModelStateRequest()
     basket_default.model_state.reference_frame="world"
     basket_default.model_state.model_name="basket"
-    basket_pose = Pose(Point( 0.25, 0, 0.78), Quaternion(0,0,0,1)) #Default basket pose
+    basket_pose = Pose(Point(0.15, 0, 0.78), Quaternion(0,0,0,1)) #Default basket pose
     basket_default.model_state.pose=basket_pose
 
     #Spawn objects
@@ -104,6 +103,9 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
     spawn_object("box1",box1,"",pb1,"world")
     spawn_object("cyl0",cyl0,"",pc0,"world")
     spawn_object("cyl1",cyl1,"",pc1,"world")
+
+    #Set basket position
+    move_object(basket_default)
 
     #Wait command services
     rospy.wait_for_service("close_right_gripper") #This is the last service to be spawned in oscar_command_services.py
@@ -115,14 +117,10 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
     left_gripper=rospy.ServiceProxy("close_left_gripper", GripperControl)
 
 
-
     #Get poses from workspace_pick.csv
     ws_csv=pkg_path+"/scripts/workspace_pick.csv"
     pos_df=pd.read_csv(ws_csv)
-    #Shuffle poses dataframe
-    pos_df = pos_df.sample(frac=1).reset_index(drop=True)
-    #Convert to list
-    poses=pos_df.values
+    
 
     #Get factors from pick_and_place_factors.csv
     fact_csv=pkg_path+"/scripts/pick_and_place_factors.csv"
@@ -130,9 +128,7 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
     #Convert to list
     factors=fact_df.values
     
-    
-
-    
+     
     #Open grippers
     rospy.loginfo("Opening grippers")
     right_gripper(False)
@@ -147,8 +143,14 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
 
 
     #Experiment
-
+    run=1 #Run counter
     for factor in factors:
+        
+        #Shuffle poses dataframe
+        pos_df = pos_df.sample(frac=1).reset_index(drop=True)
+        #Convert to list
+        poses=pos_df.values
+
         #Empty list to store results
         results=[]
 
@@ -217,7 +219,7 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
             rospy.logdebug(move_resp.status_message)
 
             #Pick and place object
-            rospy.loginfo(f"Moving to x={pose[1]}, y={pose[2]}. Velocity={velocity}. Arm={pose[0]}")
+            rospy.loginfo(f"Run:{run}-Moving to x={pose[1]}, y={pose[2]}. Velocity={velocity}. Arm={pose[0]}")
             pick_and_place(pose[1], pose[2], velocity, arm, gripper)
 
 
@@ -259,18 +261,20 @@ def pose_test(): #Arguments are coded levels of the experiment (0: Low, 1: High)
         move_object(move_obj_default)
         rospy.loginfo("Saving Results")
         results_df=pd.DataFrame(results,columns=['arm','x','y','velocity','object','success'])
-        results_df.to_csv(pkg_path+'/results/pick_place_test/'+f'exp_{obj}_vel{velocity}.csv', index=False)
+        results_df.to_csv(pkg_path+'/results/pick_place_test/'+f'exp_r{run}_{obj}_vel{velocity}.csv', index=False)
+        
 
-    #Log finish time
-    now=datetime.now()
-    rospy.loginfo("Finish Time: "+str(now))   
+        #Log finish time of each run
+        now=datetime.now()
+        rospy.loginfo(f"Finish Time (Run{run}): "+str(now)) 
+        run=run+1  
 
     
 
 def pick_and_place(x, y, velocity, arm, gripper):
     pre_pick_pose=ArmControlRequest(x,y,0.9,velocity,'')
     pick_pose=ArmControlRequest(x,y,0.8,velocity,'')
-    place_pose=ArmControlRequest(0.25,0,0.87,velocity,'')
+    place_pose=ArmControlRequest(0.15,0,0.87,velocity,'')
     home=ArmControlRequest(0,0,0,velocity,"home")
 
 
