@@ -40,25 +40,6 @@ move_obj_msg.model_state.pose=obj_pose
 
 
 
-'''
-#End effector orientations
-orient = Quaternion(*tf.transformations.quaternion_from_euler(0, pi/4, 0))
-orient1 = Quaternion(*tf.transformations.quaternion_from_euler(0, pi/4, pi/4))
-orient2 = Quaternion(*tf.transformations.quaternion_from_euler(0, pi/4, -pi/4))
-
-#Predefined poses for the end effector
-pose_pick = Pose(Point( 0.4, -0.35, 0.8), orient)
-pose_place = Pose(Point( 0.25, 0, 0.801), orient1)
-pose_pick_left = Pose(Point( 0.25, 0, 0.8), orient2)
-pose_place_left = Pose(Point( 0.4, 0.35, 0.801), orient)
-
-#Predefined poses for the end effector
-pose_pre_pick = Pose(Point( 0.4, -0.35, 0.9), orient)
-pose_pre_place = Pose(Point( 0.25, 0, 0.9), orient1)
-pose_pre_pick_left = Pose(Point( 0.25, 0, 0.9), orient2)
-pose_pre_place_left = Pose(Point( 0.4, 0.35, 0.9), orient)
-'''
-
 #Predefined poses for right arm
 pose_pick_right = ArmControlRequest( 0.4, -0.35, 0.8, 1, '')
 pose_place_right = ArmControlRequest( 0.25, 0, 0.85, 1, '') 
@@ -72,22 +53,6 @@ pose_pre_pick_left = ArmControlRequest( 0.25, 0, 0.9, 1, '')
 pose_pre_place_left = ArmControlRequest( 0.4, 0.35, 0.9, 1, '') 
 
 
-'''
-#Start Moveit
-moveit_commander.roscpp_initialize(sys.argv)
-#Commander for the arm and for the robot
-right = moveit_commander.MoveGroupCommander("right_arm")
-left = moveit_commander.MoveGroupCommander("left_arm")
-right_gripper = moveit_commander.MoveGroupCommander("right_gripper")
-left_gripper = moveit_commander.MoveGroupCommander("left_gripper")
-robot = moveit_commander.RobotCommander()
-
-#Set Velocity
-right.set_max_velocity_scaling_factor(1)
-right_gripper.set_max_velocity_scaling_factor(1)
-left.set_max_velocity_scaling_factor(1)
-left_gripper.set_max_velocity_scaling_factor(1)
-'''
 
 #Start Node
 rospy.init_node('oscar_grab_test',anonymous=True)
@@ -216,5 +181,3 @@ print(left_arm(0,0,0,1,"home"))
 
 
 
-
-#moveit_commander.roscpp_shutdown()
