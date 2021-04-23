@@ -62,7 +62,7 @@ class OscarPerception:
 
 
         #Extrinsic Parameters
-        elevation = 1.250 #Camera height measured from the table
+        self.camera_elevation = 1.250 #Camera height measured from the table
 
         #Color Limits
         self.r=(0,5)
@@ -78,10 +78,30 @@ class OscarPerception:
         self.cam=cam = ct.Camera(ct.RectilinearProjection(focallength_mm=f,
                                                 sensor=sensor_size,
                                                 image=image_size),
-                    ct.SpatialOrientation(elevation_m=elevation,tilt_deg=0))
+                    ct.SpatialOrientation(elevation_m=self.camera_elevation,tilt_deg=0))
+
+        #Define Generic Transform
+        self.t = TransformStamped()
+
+        #Placeholder header
+        self.t.header.stamp = rospy.Time.now()
+        self.t.header.frame_id = ""
+        self.t.child_frame_id = ""
+        #Placeholder translation
+        self.t.transform.translation.x = 0
+        self.t.transform.translation.y = 0
+        self.t.transform.translation.z = 0.0
+
+        #Rotation is ignored in visual 2D algorithm
+        self.t.transform.rotation.x = 0
+        self.t.transform.rotation.y = 0
+        self.t.transform.rotation.z = 0
+        self.t.transform.rotation.w = 1
 
 
     def visual_processing(self,data):
+        
+
         im = np.frombuffer(data.data, dtype=np.uint8).reshape(data.height, data.width, -1)
         
         # print("saving Image")
@@ -98,7 +118,6 @@ class OscarPerception:
         #Get object poses in the image frame (Centered in the table, y pointing forward, x pointing right)
 
         #Object
-        print(obj_find)
         if obj_find[0]:
             obj_pose_img=self.cam.spaceFromImage([obj_find[1][0],obj_find[1][1]], Z=self.object_z)
         else:
@@ -111,9 +130,33 @@ class OscarPerception:
             bskt_pose_img=[-1, 0.325, self.object_z] #If not found map to the left corner of the table
 
         #Publish Results in tf frames
+        frame_time=rospy.Time.now() #Stamp time AFTER processing,this could cause issues
 
-        rospy.loginfo(f"Object: ({obj_pose_img[0]},{obj_pose_img[1]},{obj_pose_img[2]})")
-        rospy.loginfo(f"Basket: ({bskt_pose_img[0]},{bskt_pose_img[1]},{bskt_pose_img[2]})")
+        #Object frame
+        #Header
+        self.t.header.stamp = rospy.Time.now()
+        self.t.header.frame_id = data.header.frame_id
+        self.t.child_frame_id = "perceived_object"
+        #Object ranslation
+        self.t.transform.translation.x = self.camera_elevation-self.object_z
+        self.t.transform.translation.y = -obj_pose_img[0]
+        self.t.transform.translation.z = obj_pose_img[1]
+        #Publish transform
+        self.tf_br.sendTransform(self.t)
+
+        #Basket frame
+        #Header
+        self.t.child_frame_id = "perceived_basket"
+        #Object ranslation
+        self.t.transform.translation.x = self.camera_elevation-self.object_z
+        self.t.transform.translation.y = -bskt_pose_img[0]
+        self.t.transform.translation.z = bskt_pose_img[1]
+        #Publish transform
+        self.tf_br.sendTransform(self.t)
+
+
+        #rospy.loginfo(f"Object: ({obj_pose_img[0]},{obj_pose_img[1]},{obj_pose_img[2]})")
+        #rospy.loginfo(f"Basket: ({bskt_pose_img[0]},{bskt_pose_img[1]},{bskt_pose_img[2]})")
 
 
         
