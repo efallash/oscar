@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   message_runtime
   std_msgs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -58,6 +59,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    ArmControl.srv
    GripperControl.srv
+   Perception.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -71,6 +73,7 @@ find_package(catkin REQUIRED COMPONENTS
  generate_messages(
    DEPENDENCIES
    std_msgs
+   geometry_msgs
  )
 
 ################################################

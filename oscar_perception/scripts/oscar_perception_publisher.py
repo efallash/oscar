@@ -7,6 +7,7 @@ import sys, rospy, moveit_commander
 from geometry_msgs.msg import Pose, Point, Quaternion, TransformStamped
 from sensor_msgs.msg import Image, PointCloud2
 from std_msgs.msg import Bool 
+from control_msgs.msg import JointControllerState
 import tf
 import tf2_ros
 import rospy
@@ -22,7 +23,7 @@ import cameratransform as ct
 import numpy as np
 from math import pi
 
-#Service servers to generate visual and tactile perceptions
+#Real-Time publishers of the frames of the objects in the scene
 
 class OscarPerception:
     def __init__(self):
@@ -35,8 +36,9 @@ class OscarPerception:
         #Depth Camera
         #rospy.Subscriber("kinect/depth/points", Image, self.visual_processing_3d) #No implementado
 
-        # Gripper subscribers
-
+        # Gripper subscribers #No implementados
+        #rospy.Subscriber("right_gripper_controller/state", JointControllerState, self.tactile_processing)
+        #rospy.Subscriber("left_gripper_controller/state", JointControllerState, self.tactile_processing)
 
         # Create perception publishers
 
@@ -75,7 +77,7 @@ class OscarPerception:
         self.object_z=0.025 #Works for both object and basket
         
         #Camera
-        self.cam=cam = ct.Camera(ct.RectilinearProjection(focallength_mm=f,
+        self.cam=ct.Camera(ct.RectilinearProjection(focallength_mm=f,
                                                 sensor=sensor_size,
                                                 image=image_size),
                     ct.SpatialOrientation(elevation_m=self.camera_elevation,tilt_deg=0))
@@ -158,7 +160,7 @@ class OscarPerception:
         #rospy.loginfo(f"Object: ({obj_pose_img[0]},{obj_pose_img[1]},{obj_pose_img[2]})")
         #rospy.loginfo(f"Basket: ({bskt_pose_img[0]},{bskt_pose_img[1]},{bskt_pose_img[2]})")
 
-
+        
         
 
 
@@ -219,10 +221,10 @@ class OscarPerception:
     
 
 if __name__ == "__main__":
-    rospy.init_node('oscar_perception_server', anonymous = False)
-    rospy.loginfo("Started OSCAR perception server node")
+    rospy.init_node('oscar_perception_publisher', anonymous = False)
+    rospy.loginfo("Started OSCAR Perception Publisher node")
     server=OscarPerception()
-    rospy.loginfo("OSCAR Perception Server Node: Setup Finished")
+    rospy.loginfo("OSCAR Perception Publisher Node: Setup Finished")
     rospy.spin()
 
     
