@@ -127,7 +127,7 @@ class OscarPerception:
         #Basket
         bskt=Point()
         bskt.x=bskt_pose_img[1]+0.425 #Translate 425mm 
-        bskt.y=obj_pose_img[0]*-1 #Invert direction
+        bskt.y=bskt_pose_img[0]*-1 #Invert direction
         bskt.z=0.8 #Pick Height
 
         return obj,bskt

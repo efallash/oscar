@@ -3,7 +3,7 @@
   <model name ='button'>
     <static>true</static>
     <link name ='link'>
-      <collision name="collision">
+      <!--<collision name="collision">
         <geometry>
           <cylinder>
             <radius>0.02</radius>
@@ -24,7 +24,7 @@
             </ode>
           </contact>
         </surface>
-      </collision>
+      </collision>-->
       <visual name="visual">
         <geometry>
           <cylinder>

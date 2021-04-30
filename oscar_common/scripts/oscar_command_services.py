@@ -94,19 +94,28 @@ class oscar_command:
     #Commands the arm to a xyz position with simple orientation estimation for the end effector
     def arm_command(self, req, group, arm_frame):
 
+
+        execute=True #Flag for execution
         #Check if velocity command is in allowed values
         if req.vel>0 and req.vel<=1:
             group.set_max_velocity_scaling_factor(req.vel)
         else:
             rospy.logerr("Wrong Velocity Factor")
+            execute=False
+            
         
         if len(req.named_pose)>0 :
             group.set_named_target(req.named_pose)
             plan_success,plan,*_ = group.plan()
             exec_success=False
-            if plan_success:              
-              rospy.loginfo("Executing Pose")
-              exec_success=group.execute(plan,wait=True)
+            if plan_success:
+                if execute:            
+                    rospy.loginfo("Executing Pose")
+                    exec_success=group.execute(plan,wait=True)
+                else:
+                    rospy.loginfo("Pose not executed")
+                    exec_success=False
+
             return(plan_success,exec_success)
 
 
@@ -144,20 +153,26 @@ class oscar_command:
 
 
         for pitch in pitch_list:
-          #Build pose message
-          target_pose=Pose(Point(req.x,req.y,req.z),Quaternion(*tf.transformations.quaternion_from_euler(0, pitch, yaw)))
-          
+            #Build pose message
+            target_pose=Pose(Point(req.x,req.y,req.z),Quaternion(*tf.transformations.quaternion_from_euler(0, pitch, yaw)))
+            
 
-          #Plan Pose
-          group.set_pose_target(target_pose)
-          rospy.loginfo("Planing")
-          plan_success,plan,*_ = group.plan()
-          
-          #If planning was successfull, execute trajectory
-          if plan_success:              
-              rospy.loginfo("Executing Pose")
-              exec_success=group.execute(plan,wait=True)
-              break
+            #Plan Pose
+            group.set_pose_target(target_pose)
+            rospy.loginfo("Planing")
+            plan_success,plan,*_ = group.plan()
+            
+            #If planning was successfull, execute trajectory
+            if plan_success:
+                if execute:              
+                    rospy.loginfo("Executing Pose")
+                    exec_success=group.execute(plan,wait=True)
+                    break
+                else:
+                    rospy.loginfo("Pose Not executed")
+                    exec_success=False
+                    break
+
 
 
         return(plan_success,exec_success)

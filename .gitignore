@@ -1,0 +1,9 @@
+oscar_common/scripts/switch_hands_temp.py
+*~
+*.pyc
+*.log
+*.idea
+*.DS_Store
+.vscode
+*.pckl
+.!*
