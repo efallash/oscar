@@ -36,7 +36,7 @@
     </include>
     
      <include>
-      <uri>model://red_box</uri>
+      <uri>model://red_cylinder</uri>
       <pose>0.5 0 0.85 0 0 0</pose>
      </include>
       

@@ -186,7 +186,7 @@ class OscarPerception:
         small_region=False
 
         if len(region) == 1:
-            if region[0].area > 2500:
+            if region[0].area > 1500:
                 position=region[0].centroid
                 return True, (position[1],position[0]) #Returns flag and image centroid
             else:

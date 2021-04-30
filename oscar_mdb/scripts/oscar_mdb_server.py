@@ -83,11 +83,11 @@ class OscarMDB:
         rospy.Subscriber("mdb/oscar/control", ControlMsg, self.reset_world_callback)
 
     def policy_callback(self, data):
+        rospy.loginfo(f"Executing {data.data} policy...")
+        self.update_perceptions()
         getattr(self, data.data + "_policy")()
-
         self.update_perceptions()
         self.update_reward()
-
         self.publish_perception()
 
     def reset_world_callback(self, data):
@@ -106,9 +106,6 @@ class OscarMDB:
             rospy.logfatal("ATTENTION/ACHTUNG: LTM COMMAND NOT RECOGNIZED")
 
     def grasp_right_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing grasp_right policy...")
-
         if not self.perception.obj_in_left_hand and not self.perception.obj_in_left_hand:
             pick_point=self.perception.red_object
 
@@ -135,9 +132,6 @@ class OscarMDB:
                 self.right_arm(0,0,0,1,"home")
 
     def grasp_left_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing grasp_left policy...")
-
         if not self.perception.obj_in_left_hand and not self.perception.obj_in_left_hand:
             pick_point=self.perception.red_object
 
@@ -163,8 +157,6 @@ class OscarMDB:
                 self.left_arm(0,0,0,1,"home")
 
     def press_button_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing press_button policy...")
         if not self.perception.obj_in_left_hand and not self.perception.obj_in_right_hand:
             #Go Home and close the gripper
             self.left_arm(0,0,0,1,"home")
@@ -192,9 +184,6 @@ class OscarMDB:
             self.left_gripper(False)
 
     def place_object_right_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing place_object_right policy...")
-
         #Check if basket is reachable
         place_point=self.perception.basket
         plan=self.right_arm(place_point.x,place_point.y,place_point.z,0,"")
@@ -208,17 +197,15 @@ class OscarMDB:
 
             #Go Home
             self.right_arm(0,0,0,1,"home")
+        if not plan.plan and place_point.y<0: #Basket not reachable when it should
+            rospy.logfatal(f"ACHTUNG: Basket not reachable x={place_point.x} y={place_point.y}")
 
     def place_object_left_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing place_object_left policy...")
-
-
         #Check if basket is reachable
         place_point=self.perception.basket
         plan=self.left_arm(place_point.x,place_point.y,place_point.z,0,"")
 
-        if self.perception.obj_in_left_hand:
+        if self.perception.obj_in_left_hand and plan.plan:
             place_point=self.perception.basket
 
             #Go above basket and release object
@@ -227,10 +214,10 @@ class OscarMDB:
 
             #Go Home
             self.left_arm(0,0,0,1,"home")
+        if not plan.plan and place_point.y>0: #Basket not reachable when it should
+            rospy.logfatal(f"ACHTUNG: Basket not reachable x={place_point.x} y={place_point.y}")
 
     def change_hands_policy(self):
-        self.update_perceptions()
-        rospy.loginfo("Executing change_hands policy...")
         if self.perception.obj_in_left_hand:
             #Move left hand to give position
             self.left_arm(0,0,0,1,"switch_give")
@@ -270,13 +257,6 @@ class OscarMDB:
             self.left_arm(0,0,0,1,"home")
             self.right_arm(0,0,0,1,"home")
 
-
-
-
-
-
-
-
     def update_perceptions(self):
         rospy.loginfo("Updating Perceptions....")
         self.perception=self.perception_srv(PerceptionRequest())
@@ -294,11 +274,7 @@ class OscarMDB:
         self.obj_in_left_hand=self.perception.obj_in_left_hand
         self.obj_in_right_hand=self.perception.obj_in_right_hand
 
-
-
-
     def update_reward(self):
-        self.update_perceptions()
         rospy.loginfo("Reading Reward....")
 
         basket_x=self.perception.basket.x
@@ -318,18 +294,20 @@ class OscarMDB:
         #print(f"delta_x={delta_x}, delta_y={delta_y}")
         rospy.loginfo(f"Reward obtained: {self.reward}")
 
-
-
     def publish_perception(self):
         rospy.loginfo("Publishing Perceptions....")
+
         self.red_object_pub.publish(self.red_object)
         self.basket_pub.publish(self.basket)
         self.obj_in_left_hand_pub.publish(self.obj_in_left_hand)
         self.obj_in_right_hand_pub.publish(self.obj_in_right_hand)
         self.reward_pub.publish(self.reward)
 
-        #Combinar bring_object_near y random_positions
-    def bring_object_near(self):
+        #rospy.logdebug(f"Published perceptions: obj:{self.red_object}, bskt:{self.basket}, left_hand:{self.obj_in_left_hand}, right_hand:{self.obj_in_left_hand}, reward:{self.reward}")
+
+
+     
+    def bring_object_near(self): #Combinar bring_object_near y random_positions
         basket_x=self.perception.basket.x
         basket_y=self.perception.basket.y
 
@@ -358,8 +336,8 @@ class OscarMDB:
         rospy.logdebug(move_resp.status_message)
         
     def random_positions(self):
-        basket_x=np.random.uniform(low=0.225,high=0.25)
-        basket_y=np.random.uniform(low=-0.65,high=0.65)
+        basket_x=np.random.uniform(low=0.25,high=0.35)
+        basket_y=np.random.uniform(low=-0.55,high=0.55)
 
         object_x=np.random.uniform(low=0.1125,high=0.7375)
         object_y=np.random.uniform(low=-0.7415,high=0.7415)
