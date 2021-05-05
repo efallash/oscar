@@ -1,0 +1,28 @@
+<launch>
+    <arg name="backup" default="backup"/>
+    <arg name="log_level" default="DEBUG"/>
+    <arg name="debug" default="False"/>
+    <arg name="launch-prefix" default="" unless="$(arg debug)"/>
+    <arg name="launch-prefix" default="winpdb" if="$(arg debug)"/>
+    <arg name="simulator" default="True"/>
+    <arg name="motiven" default="False"/>
+    <arg name="plot" default="False"/>
+	<arg name="plot_arg" value="" unless="$(arg plot)"/>
+	<arg name="plot_arg" value="--plot" if="$(arg plot)"/>
+    <arg name="config_file" default="$(find oscar_mdb)/config/hack_ltm_config_oscar.yaml"/>
+    <arg name="save_dir" default="$(find oscar_mdb)"/>
+    <arg name="standalone" default="False"/>
+    <arg name="standalone_arg" value="" unless="$(arg standalone)"/>
+    <arg name="standalone_arg" value="--standalone" if="$(arg standalone)"/>
+    <arg name="start_server" default="True"/>
+    <rosparam file="$(find oscar_mdb)/config/hack_ros_parameters_oscar.yaml"/>
+    <group ns="mdb">
+        <node pkg="mdb_ltm" type="mdb_ltm" name="ltm" args="-b ltm.$(arg backup) -s $(arg config_file) -l $(arg log_level) $(arg plot_arg)" launch-prefix="$(arg launch-prefix)" output="screen"/>
+        <!--<node pkg="mdb_view" type="mdb_view" name="view" args="-s $(arg config_file) -l $(arg log_level) -d $(arg save_dir)" launch-prefix="$(arg launch-prefix)" if="$(arg view)"/>-->
+    </group>
+
+    <node pkg="oscar_perception" type="oscar_perception_services.py" name="oscar_perception_server" if="$(arg start_server)"/>
+    <node pkg="oscar_mdb" type="hack_oscar_mdb_server.py" name="oscar_mdb_server" if="$(arg start_server)"/>
+
+
+</launch>

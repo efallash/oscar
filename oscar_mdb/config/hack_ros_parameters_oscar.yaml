@@ -1,0 +1,40 @@
+# Topic to send commands from one node to another
+/mdb/control_topic: /mdb/oscar/control
+/mdb/control_msg: mdb_common.msg.ControlMsg
+# Topic to publish P-node creation
+/mdb/p_node_topic: /mdb/ltm/p_node
+/mdb/p_node_msg: mdb_common.msg.PNodeMsg
+# Topic to publish P-node updates
+/mdb/p_node_update_topic: /mdb/ltm/p_node_update
+/mdb/p_node_update_msg: mdb_common.msg.PointMsg
+# Topic for publishing C-node creation
+/mdb/c_node_topic: /mdb/ltm/c_node
+/mdb/c_node_msg: mdb_common.msg.CNodeMsg
+# Topic for publishing Goal creation
+/mdb/goal_topic: /mdb/motiven/goal
+/mdb/goal_msg: mdb_common.msg.GoalMsg
+# Topic to publish goal activations
+/mdb/goal_activation_topic: /mdb/motiven/goal_activation
+/mdb/goal_activation_msg: mdb_common.msg.GoalActivationMsg
+# Topic to publish goal accomplishment
+/mdb/goal_ok_topic: /mdb/motiven/goal_ok
+/mdb/goal_ok_msg: mdb_common.msg.GoalOkMsg
+# Topic for publishing Forward Model creation
+/mdb/forward_model_topic: /mdb/stm/forward_model
+/mdb/forward_model_msg: mdb_common.msg.ForwardModelMsg
+# Topic for publishing Policy creation
+/mdb/policy_topic: /mdb/stm/policy
+/mdb/policy_msg: mdb_common.msg.PolicyMsg
+# Topic to publish the executed policy's id
+/mdb/executed_policy_topic: /mdb/ltm/executed_policy
+/mdb/executed_policy_msg: std_msgs.msg.String
+#Topics for OSCAR's sensors
+/mdb/oscar/sensor/red_object_topic: /mdb/oscar/sensor/red_object
+/mdb/oscar/sensor/red_object_msg: mdb_common.msg.ObjectListMsg
+/mdb/oscar/sensor/basket_topic: /mdb/oscar/sensor/basket
+/mdb/oscar/sensor/basket_msg: mdb_common.msg.ObjectListMsg
+/mdb/oscar/sensor/oscar_in_left_hand_topic: /mdb/oscar/sensor/oscar_in_left_hand
+/mdb/oscar/sensor/oscar_in_left_hand_msg: std_msgs.msg.Bool
+/mdb/oscar/sensor/oscar_in_right_hand_topic: /mdb/oscar/sensor/oscar_in_right_hand
+/mdb/oscar/sensor/oscar_in_right_hand_msg: std_msgs.msg.Bool
+
