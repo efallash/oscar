@@ -302,7 +302,7 @@ class OscarMDB:
         delta_x=abs(basket_x-object_x)
         delta_y=abs(basket_y-object_y)
 
-        if delta_x<0.035 and delta_y<0.035:
+        if delta_x<0.043 and delta_y<0.043:
             reward=1
         else:
             reward=0
