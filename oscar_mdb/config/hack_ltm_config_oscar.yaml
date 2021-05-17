@@ -1,7 +1,7 @@
 Experiment:
     iterations: 3000
     period: 3000
-    trials: 20 #Intentos sin recompensa antes de reiniciar el mundo
+    trials: 10 #Intentos sin recompensa antes de reiniciar el mundo
     worlds: ['gripper_and_low_friction']
 
 Control:
@@ -54,10 +54,10 @@ LTM:
                 id: red_object
                 class: mdb_ltm.perception.ObjectListPerception
                 data:
-                    distance_min: 0.2
-                    distance_max: 1.9
-                    angle_min: -1.65
-                    angle_max: 1.65
+                    distance_min: 0.1
+                    distance_max: 1.25
+                    angle_min: -1.5
+                    angle_max: 1.5
                     diameter_min: 0.0
                     diameter_max: 0.15
                 ros_name_prefix: /mdb/oscar/sensor/red_object
@@ -65,10 +65,10 @@ LTM:
                 id: basket
                 class: mdb_ltm.perception.ObjectListPerception
                 data:
-                    distance_min: 0.2
-                    distance_max: 1.9
-                    angle_min: -1.65
-                    angle_max: 1.65
+                    distance_min: 0.1
+                    distance_max: 1.25
+                    angle_min: -1.5
+                    angle_max: 1.5
                     diameter_min: 0.0
                     diameter_max: 0.15
                 ros_name_prefix: /mdb/oscar/sensor/basket
@@ -88,7 +88,7 @@ LTM:
             -
                 id: object_in_box
                 class: mdb_ltm.goal.GoalGetPublishedReward
-                data: [0, 16000, 16000]
+                data: [0, 3000, 3000]
 
         Policy:
             -

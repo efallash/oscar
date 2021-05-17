@@ -1,6 +1,6 @@
 <launch>
     <arg name="backup" default="backup"/>
-    <arg name="log_level" default="DEBUG"/>
+    <arg name="log_level" default="INFO"/>
     <arg name="debug" default="False"/>
     <arg name="launch-prefix" default="" unless="$(arg debug)"/>
     <arg name="launch-prefix" default="winpdb" if="$(arg debug)"/>
