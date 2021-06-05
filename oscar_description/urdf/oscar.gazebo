@@ -1,5 +1,10 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-<!-- Gazebo plugins and properties for OSCAR robot -->
+
+<!-- oscar.gazebo: Gazebo plugins and properties for OSCAR robot-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
 
   <!-- Control plugin --> 
   <gazebo>

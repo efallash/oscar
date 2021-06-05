@@ -1,12 +1,28 @@
 #!/usr/bin/env python3
 
-# Python 2 compatibility imports
+#    pick_place_test.py: Script to perform a pick and place test with OSCAR robot
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+# Python 2 compatibility imports (Probably not necessary)
 from __future__ import absolute_import, division, print_function
 from future import standard_library
 
+#ROS and standard imports
 from datetime import datetime
 from copy import deepcopy
-
 import sys, rospy, tf, tf2_ros, moveit_commander, random, rospkg
 import pandas as pd
 import numpy as np
@@ -24,7 +40,6 @@ from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 
 #Script to test different pick and place conditions and record the results
-
 def pose_test():
 
     
@@ -300,24 +315,10 @@ def pick_and_place(x, y, velocity, arm, gripper):
     return success
   
         
-    
-
-
-    
-
-    
-    
-
-
-    
-
-
+#MAIN PROGRAM
 if __name__=='__main__':
   try:
     pose_test()
-
-
-
   except rospy.ROSInterruptException:
     pass
 

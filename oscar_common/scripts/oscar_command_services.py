@@ -1,10 +1,26 @@
 #!/usr/bin/env python3
-# This code has been adapted from the ROS Wiki ROS Service tutorials and the HRWROS MOOC
-# (http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)
 
+#    oscar_command_services.py: ROS Service Server for OSCAR commands
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#OSCAR's msgs import
 from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 
+#ROS imports
 import sys, rospy, moveit_commander
 from geometry_msgs.msg import Pose, Point, Quaternion
 import tf
@@ -12,8 +28,8 @@ import rospy
 import numpy as np
 from math import pi
 
-#Service servers to command OSCAR's arms
 
+#MAIN CLASS
 class oscar_command:
     def __init__(self):
         #Initialize Moveit
@@ -42,10 +58,6 @@ class oscar_command:
         
         
 
-        
-
-
-
     def left_arm_callback(self,req):
         rospy.loginfo("left_arm_callback")
 
@@ -73,12 +85,11 @@ class oscar_command:
 
         return res
 
+
     def left_gripper_callback(self,req):
         rospy.loginfo("Left Gripper Service Called")
         # Instantiate the response message object.
         res= self.gripper_control(req, self.left_gripper)
-    
-        
         return res
         
 
@@ -86,8 +97,6 @@ class oscar_command:
         rospy.loginfo("Right Gripper Service Called")
         # Instantiate the response message object.
         res = self.gripper_control(req, self.right_gripper)
-
-        
         return res
 
 
@@ -103,7 +112,7 @@ class oscar_command:
             rospy.logerr("Wrong Velocity Factor")
             execute=False
             
-        
+        #If a named pose is commanded
         if len(req.named_pose)>0 :
             group.set_named_target(req.named_pose)
             plan_success,plan,*_ = group.plan()
@@ -149,9 +158,6 @@ class oscar_command:
         #Attempt planning for every pitch angle
         plan_success=False
         exec_success=False
-        
-
-
         for pitch in pitch_list:
             #Build pose message
             target_pose=Pose(Point(req.x,req.y,req.z),Quaternion(*tf.transformations.quaternion_from_euler(0, pitch, yaw)))
@@ -173,16 +179,9 @@ class oscar_command:
                     exec_success=False
                     break
 
-
-
         return(plan_success,exec_success)
 
 
-
-
-
-
-   
     def gripper_control(self,req,group):
         rospy.loginfo('Commanding gripper...')
 
@@ -203,9 +202,7 @@ class oscar_command:
         #Return the response message.
         return res
 
-
-    
-
+#MAIN PROGRAM: Creates oscar_command object and spins the thread
 if __name__ == "__main__":
     rospy.init_node('oscar_command_server', anonymous = False)
     server=oscar_command()

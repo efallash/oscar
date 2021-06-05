@@ -1,3 +1,5 @@
+<!--WARNING: USED WITH A DEPRECATED VERSION OF THE MDB-->
+<!--WARNING: WILL BE REMOVED ONCE MDB IS DEBBUGED-->
 <launch>
     <arg name="backup" default="backup"/>
     <arg name="log_level" default="INFO"/>

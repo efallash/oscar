@@ -1,4 +1,4 @@
-#Message to respond when perceptual state is requested
+#Service message to respond when perceptual state is requested
 ---
 #Send points in WORLD reference frame
 geometry_msgs/Point red_object

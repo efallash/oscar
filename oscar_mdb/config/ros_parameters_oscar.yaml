@@ -1,3 +1,9 @@
+#ros_parameters_oscar.yaml: Configures ROS topics for the MDB experiment.
+#Author: Grupo Integrado de Ingenieria
+#Modified: Emanuel Fallas
+#Distributed under GPLv3
+
+
 # Topic to publish reward
 /mdb/reward_topic: /mdb/reward
 /mdb/reward_msg: std_msgs.msg.Float64

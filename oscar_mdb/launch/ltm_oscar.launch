@@ -1,4 +1,13 @@
+<!-- ltm_oscar.launch: Launches a learning experiment with OSCAR and MDB-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Grupo Integrado de Ingenieria -->
+<!-- Modified: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
 <launch>
+
+    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
     <arg name="backup" default="backup"/>
     <arg name="log_level" default="DEBUG"/>
     <arg name="debug" default="False"/>
@@ -14,11 +23,14 @@
     <arg name="standalone_arg" value="--standalone" if="$(arg standalone)"/>
     <arg name="start_server" value="True"/>
     <rosparam file="$(find oscar_mdb)/config/ros_parameters_oscar.yaml"/>
+
+    <!--Launches MDB (Currently not using the visualizartion)-->
     <group ns="mdb">
         <node pkg="mdb_ltm" type="mdb_ltm" name="ltm" args="-b ltm.$(arg backup) -s $(arg config_file) -l $(arg log_level)" launch-prefix="$(arg launch-prefix)" output="screen"/>
         <!--<node pkg="mdb_view" type="mdb_view" name="view" args="-s $(arg config_file) -l $(arg log_level) -d $(arg save_dir)" launch-prefix="$(arg launch-prefix)" if="$(arg view)"/>-->
     </group>
 
+    <!--Launches the perception server and the oscar_mdb_server-->
     <node pkg="oscar_perception" type="oscar_perception_services.py" name="oscar_perception_server" if="$(arg start_server)"/>
     <node pkg="oscar_mdb" type="oscar_mdb_server.py" name="oscar_mdb_server" output="screen" if="$(arg start_server)"/>
 

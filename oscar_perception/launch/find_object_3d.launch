@@ -1,3 +1,5 @@
+<!--TEST OF THE PACKAGE find_object_2d for 3D data processing (yes, 3D Data)-->
+<!--Didn't work well-->
 <launch>
 		
 	<node name="find_object_3d" pkg="find_object_2d" type="find_object_2d" output="screen">

@@ -17,7 +17,7 @@ left_arm_controller:
       goal_time: 0.1
       stopped_velocity_tolerance: 0.01
       left_arm_Art1_Yaw:
-        goal: &goal_pos_constraint 0.02 # Uno 1% de error en un goal de pi/2
+        goal: &goal_pos_constraint 0.02 # 1% error in a pi/2 goal
         trajectory: &trajectory_pos_constraint 0.05
       left_arm_Art2_Pitch:
         goal: *goal_pos_constraint

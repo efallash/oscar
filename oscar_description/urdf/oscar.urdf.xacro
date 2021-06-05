@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
+<!-- oscar.urdf.xacro: Loads oscar robot and allows to put a fixed load in the arms-->
 <!-- OSCAR: Open Source Cognitive Applied Robot -->
 <!-- Author: Emanuel Fallas -->
-<!-- Lab: LIANA https://www.tec.ac.cr/unidades/laboratorio-inteligencia-artificial-ciencias-naturales-liana -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
 
 
 <robot name="oscar" xmlns:xacro="http://ros.org/wiki/xacro">
@@ -11,24 +12,15 @@
   <!-- Import OSCAR xacro -->
   <xacro:include filename="$(find oscar_description)/urdf/oscar.xacro"/>
 
-  
+  <!--Generates oscar robot-->
   <xacro:oscar_robot />
 
+  <!--Macro to put a fixed load in the arms (used in pose test)-->
   <xacro:property name="width" value="0.025" /> 
   <xacro:arg name="mass" default="0.001" />
   <xacro:arg name="load" default="false" />
-
   <xacro:macro name="generate_box" params="width mass arm" >
       <link name="load_${arm}">
-      <!--
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <box size="${width} ${width} ${width}"/>
-        </geometry>
-      </collision>
-      -->
-
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
@@ -52,13 +44,9 @@
     </joint>  
   </xacro:macro>
 
-
+  <!--Calls the fixed load macro-->
   <xacro:if value="$(arg load)">
     <xacro:generate_box width="${width}" mass="$(arg mass)" arm="right"/>
     <xacro:generate_box width="${width}" mass="$(arg mass)" arm="left"/>
   </xacro:if>
-
-
-
-
 </robot>

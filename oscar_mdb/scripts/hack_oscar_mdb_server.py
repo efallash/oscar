@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+#WARNING: USED WITH A DEPRECATED VERSION OF THE MDB
+#WARNING: WILL BE REMOVED ONCE MDB IS DEBBUGED
+
 #ROS Imports
 import sys, rospy, moveit_commander
 from geometry_msgs.msg import Pose, Point, Quaternion, TransformStamped

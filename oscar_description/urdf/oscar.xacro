@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- oscar.xacro: OSCAR Description File-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
 <!-- This URDF was partially created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 
-
-<!-- OSCAR: Open Source Cognitive Applied Robot -->
-<!-- Author: Emanuel Fallas -->
-<!-- Lab: LIANA https://www.tec.ac.cr/unidades/laboratorio-inteligencia-artificial-ciencias-naturales-liana -->
 
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
@@ -14,12 +17,13 @@
   <!-- MAIN MACRO: Generates the URDF of the OSCAR Robot-->
   <xacro:macro name="oscar_robot" >
 
-    <!-- Import Gazebo plugins -->
+    <!--Imports Gazebo plugins-->
     <xacro:include filename="$(find oscar_description)/urdf/oscar.gazebo"/>
 
-    <!-- Load Thor robotic arm xacro file -->
+    <!--Loads Thor robotic arm xacro file-->
     <xacro:include filename="$(find thor_description)/urdf/thor_description.urdf.xacro"/>
 
+    <!--World gazebo frame-->
     <link name="world" /> 
     <joint name="base_to_world" type="fixed">
       <parent link="world"/>
@@ -87,7 +91,6 @@
 
     <!-- Right arm xacro call and joint -->
     <xacro:thor_robot prefix="right_arm_"/>
-
     <joint
       name="right_arm_fixed"
       type="fixed">
@@ -159,7 +162,7 @@
     </joint>
     
     
-    
+    <!--Optical frame to orient the point cloud properly-->
     <link name="depth_optical_frame" /> 
     <joint name="depth_camera_frame_fixed" type="fixed">
       <parent link="depth_camera_link"/>
@@ -169,7 +172,7 @@
 
     
 
-
+    <!--RGB camera-->
     <link
       name="rgb_camera_link">
       <inertial>

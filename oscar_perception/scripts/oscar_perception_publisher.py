@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 
+#    oscar_perception_publisher.py: Real-Time publishers of the frames of the objects in the scene
+#    WARNING: Not fully implemented
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
 
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ROS Imports
 import sys, rospy, moveit_commander
@@ -23,8 +37,8 @@ import cameratransform as ct
 import numpy as np
 from math import pi
 
-#Real-Time publishers of the frames of the objects in the scene
 
+#MAIN CLASS
 class OscarPerception:
     def __init__(self):
 
@@ -33,25 +47,27 @@ class OscarPerception:
         #RGB Camera
         rospy.Subscriber("camera/rgb/image_raw", numpy_msg(Image), self.visual_processing)
 
-        #Depth Camera
+        #Depth Camera #Not implemented
         #rospy.Subscriber("kinect/depth/points", Image, self.visual_processing_3d) #No implementado
 
-        # Gripper subscribers #No implementados
+        # Gripper subscribers #Not implemented
         #rospy.Subscriber("right_gripper_controller/state", JointControllerState, self.tactile_processing)
         #rospy.Subscriber("left_gripper_controller/state", JointControllerState, self.tactile_processing)
 
         # Create perception publishers
 
-        #En vez de estos se utiliza el tf publisher
+        #tf2 is used instead of these publishers
         #obj_pub = rospy.Publisher('oscar/perception/object', String, queue_size=1)
         #bskt_pub = rospy.Publisher('oscar/perception/basket', String, queue_size=1)
 
-        #Tactile perception publishers
-        self.hand_left_pub = rospy.Publisher('oscar/perception/object_in_left_hand', Bool, queue_size=1)
-        self.hand_right_pub = rospy.Publisher('oscar/perception/object_in_right_hand', Bool, queue_size=1)
-
         #Visual publisher (Object coordinates)
         self.tf_br = tf2_ros.TransformBroadcaster() #Broadcasts the detected object frame 
+
+        #Tactile perception publishers #NOT IMPLEMENTED
+        #self.hand_left_pub = rospy.Publisher('oscar/perception/object_in_left_hand', Bool, queue_size=1)
+        #self.hand_right_pub = rospy.Publisher('oscar/perception/object_in_right_hand', Bool, queue_size=1)
+
+
 
 
 
@@ -101,6 +117,9 @@ class OscarPerception:
         self.t.transform.rotation.w = 1
 
 
+    #This method is called at aprox 10Hz, uses a LOT of bandwidth
+    #A real time processing algorithm must be implemented in C++ using
+    #the ROS image transport http://wiki.ros.org/image_transport
     def visual_processing(self,data):
         
 
@@ -132,7 +151,7 @@ class OscarPerception:
             bskt_pose_img=[-1, 0.325, self.object_z] #If not found map to the left corner of the table
 
         #Publish Results in tf frames
-        frame_time=rospy.Time.now() #Stamp time AFTER processing,this could cause issues
+        frame_time=rospy.Time.now() #Stamp time is generated AFTER processing (this could cause issues)
 
         #Object frame
         #Header
@@ -155,13 +174,6 @@ class OscarPerception:
         self.t.transform.translation.z = bskt_pose_img[1]
         #Publish transform
         self.tf_br.sendTransform(self.t)
-
-
-        #rospy.loginfo(f"Object: ({obj_pose_img[0]},{obj_pose_img[1]},{obj_pose_img[2]})")
-        #rospy.loginfo(f"Basket: ({bskt_pose_img[0]},{bskt_pose_img[1]},{bskt_pose_img[2]})")
-
-        
-        
 
 
     def tactile_processing(self,data):
@@ -219,7 +231,7 @@ class OscarPerception:
 
 
     
-
+#MAIN PROGRAM: Creates OscarPerception object and spins the thread
 if __name__ == "__main__":
     rospy.init_node('oscar_perception_publisher', anonymous = False)
     rospy.loginfo("Started OSCAR Perception Publisher node")

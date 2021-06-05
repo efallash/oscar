@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+#    oscar_perception_services.py: Service server that provides the perceptual state
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 #ROS Imports
@@ -26,8 +40,7 @@ from math import pi
 #Service file import
 from oscar_msgs.srv import Perception, PerceptionResponse
 
-#Service server that provides the perceptual state
-
+#MAIN CLASS
 class OscarPerception:
     def __init__(self):
         #Service Server
@@ -65,6 +78,9 @@ class OscarPerception:
                                                 image=self.image_size),
                     ct.SpatialOrientation(elevation_m=self.camera_elevation,tilt_deg=0))
 
+
+    #Because of image transport, images must be read constantly in order for them to update
+    #Also wastes a lot of bandwidth and must be improved
     def dummy_callback(self, data):
         pass
 
@@ -207,7 +223,7 @@ class OscarPerception:
 
 
     
-
+#MAIN PROGRAM: Creates OscarPerception object and spins the thread
 if __name__ == "__main__":
     rospy.init_node('oscar_perception_server', anonymous = False)
     rospy.loginfo("Started OSCAR Perception server node")

@@ -1,16 +1,27 @@
+#ltm_config_oscar.yaml: Configures the MDB experiments.
+#Author: Grupo Integrado de Ingenieria
+#Modified: Emanuel Fallas
+#Distributed under GPLv3
+
+#Experiment configuration
 Experiment:
     iterations: 3000
     period: 3000
-    trials: 20 #Intentos sin recompensa antes de reiniciar el mundo
+    trials: 20 #Attempts without reward before a world reset is prompted
     worlds:
         - gripper_and_low_friction
+
+#Control topics definition
 Control:
     id: oscar_server
     control_prefix: /mdb/control
     info_prefix: /mdb/info
     executed_policy_prefix: /mdb/executed_policy
     reward_prefix: /mdb/reward
+
+#Long Term Memory Configuration
 LTM:
+    #Files generated in the experiment (saved in .ros folder in HOME)
     Files:
         -
             id: goodness
@@ -26,11 +37,13 @@ LTM:
             class: mdb_ltm.file.FileGoals
             file: goals.txt
             data: 1000
-        #-
+        #- #Disabled because of a bug
             #id: ltm_dump
             #class: mdb_ltm.file.FileLTMPeriodicDump
             #file: ltm_dump
             #data: 1000
+
+    #Class definition for the conectors of the LTM
     Connectors:
         -
             data: Space
@@ -67,6 +80,8 @@ LTM:
             ros_data_prefix: /mdb/executed_policy
             callback: add_node_callback
             default_class: mdb_ltm.policy.Policy
+    
+    #Class and topic definition for the nodes in the LTM
     Nodes:
         Perception:
             -

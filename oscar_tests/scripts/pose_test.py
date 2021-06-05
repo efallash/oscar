@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 
-# Python 2 compatibility imports
+#    pose_test.py: Script to perform a pose test with OSCAR robot
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Python 2 compatibility imports (Probably not necessary)
 from __future__ import absolute_import, division, print_function
 from future import standard_library
 
@@ -20,7 +35,6 @@ from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 
 #Script to test different poses for the end effector and record success (planning and execution) and accuracy
-
 def pose_test():
 
     
@@ -232,23 +246,8 @@ def pose_test():
     now=datetime.now()
     rospy.loginfo("Finish Time: "+str(now))   
 
-    
 
-
-  
-        
-    
-
-
-    
-
-    
-    
-
-
-    
-
-
+#MAIN PROGRAM
 if __name__=='__main__':
   try:
     pose_test()

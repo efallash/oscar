@@ -1,3 +1,10 @@
+<!-- oscar_control.launch: Launches OSCAR's controls-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
+
 <launch>
   <!--Select controller number-->
   <arg name="controller_num" default="0"/>
@@ -12,8 +19,5 @@
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
     output="screen" args="left_arm_controller left_gripper_controller right_arm_controller right_gripper_controller joint_state_controller"/>
-
-
-  
 
 </launch>

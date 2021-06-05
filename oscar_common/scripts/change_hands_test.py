@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 
+#    change_hands_test.py: Script to pick an object with the right arm, change to left arm and place it in the table again
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
 # Python 2 compatibility imports
 from __future__ import absolute_import, division, print_function
 from future import standard_library
@@ -13,7 +30,9 @@ from math import pi
 from oscar_msgs.srv import ArmControl, ArmControlRequest, ArmControlResponse
 from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControlResponse
 
-#Script to pick a box, go to home position and place it in its original position
+
+
+#SCRIPT START
 
 #Wait for gazebo
 rospy.wait_for_service("gazebo/set_model_state")
@@ -39,7 +58,6 @@ move_obj_msg.model_state.reference_frame="world"
 move_obj_msg.model_state.pose=obj_pose
 
 
-
 #Predefined poses for right arm
 pose_pick_right = ArmControlRequest( 0.4, -0.35, 0.8, 1, '')
 pose_place_right = ArmControlRequest( 0.25, 0, 0.85, 1, '') 
@@ -61,8 +79,6 @@ rospy.init_node('oscar_grab_test',anonymous=True)
 rospy.loginfo("Moving Object")
 move_obj_resp=move_object(move_obj_msg)
 print(move_obj_resp.status_message)
-
-
 
 
 #Upright Right
@@ -177,6 +193,9 @@ print(left_arm(pose_pre_place_left))
 #Home
 rospy.loginfo("Left Home")    
 print(left_arm(0,0,0,1,"home"))  
+
+
+#SCRIPT END
 
 
 

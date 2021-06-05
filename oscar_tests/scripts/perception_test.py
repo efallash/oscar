@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+#    perception_test.py: Script to perform a test of OSCAR's visual perception system
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#ROS and standard imports
 from datetime import datetime
 import sys, rospy, tf, tf2_ros, moveit_commander, random, rospkg
 import pandas as pd
@@ -18,7 +34,7 @@ from gazebo_msgs.srv import SetModelState, SetModelStateRequest, SetModelStateRe
 from gazebo_msgs.srv import GetModelState, GetModelStateRequest, GetModelStateResponse
 from oscar_msgs.srv import Perception, PerceptionRequest, PerceptionResponse
 
-
+#Script to place the the object or the basket in different positions and record the perception error
 def pose_test():
     #Start Node
     rospy.init_node('oscar_perception_test',anonymous=True)
@@ -172,12 +188,9 @@ def pose_test():
 
 
 
-
+#MAIN PROGRAM
 if __name__=='__main__':
     try:
         pose_test()
-
-
-
     except rospy.ROSInterruptException:
         pass

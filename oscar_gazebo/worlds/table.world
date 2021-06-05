@@ -1,4 +1,11 @@
 <?xml version="1.0" ?>
+
+<!-- table.world: World file for oscar's table enviroment-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
 <sdf version="1.5">
   <world name="table_world">
     <!-- A global light source -->
@@ -24,27 +31,26 @@
     <include>
       <uri>model://ground_plane</uri>
     </include>
-    
+    <!-- Work table -->
     <include>
       <uri>model://table</uri>
       <pose>0.425 0 0.765 0 0 0</pose>
     </include>
-
+    <!-- Help button -->
     <include>
       <uri>model://button</uri>
       <pose>0.12 0.5 0.785 0 0 0</pose>
     </include>
-    
+    <!-- Red object to manipulate -->
      <include>
       <uri>model://red_cylinder</uri>
       <pose>0.5 0 0.85 0 0 0</pose>
      </include>
       
-      
+    <!-- Blue basket -->
      <include>
       <uri>model://basket</uri>
       <pose>0.25 0 0.78 0 0 0</pose>
-     </include>
-    
+     </include>  
   </world>
 </sdf>

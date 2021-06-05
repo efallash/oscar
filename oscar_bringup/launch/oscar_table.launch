@@ -1,3 +1,9 @@
+<!-- oscar_table.launch: Launch file for OSCAR robot-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <!-- gazebo arguments -->
@@ -32,9 +38,6 @@
   <arg name="model" default="$(find oscar_description)/urdf/oscar.urdf"/>
   <param name="robot_description" command="$(find xacro)/xacro $(find oscar_description)/urdf/oscar.urdf.xacro load:=$(arg load) mass:=$(arg mass)" />
   
-
-  <!--<param name="robot_description" command="$(find xacro)/xacro $(find oscar_description)/urdf/test.urdf " />-->
-
   <!-- Spawn OSCAR in gazebo -->
   <node
     name="spawn_model"
@@ -51,16 +54,8 @@
   <!-- Launch moveit -->
    <include file="$(find oscar_moveit_config)/launch/move_group.launch"/>
 
-
   <!-- Commanding Services -->
   <node name="oscar_command_server" pkg="oscar_common"
     type="oscar_command_services.py"/>
-
-
-
-
-
-
-
 
 </launch>

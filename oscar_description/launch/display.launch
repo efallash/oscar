@@ -1,23 +1,42 @@
+<!-- display.launch: Displays OSCAR in rviz-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
 <launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg
     name="model" />
   <arg
     name="gui"
     default="False" />
+
+  <!--Loads oscar's xacro file in the parameter server-->
   <param
     name="robot_description"
     command="$(find xacro)/xacro '$(find oscar_description)/urdf/oscar.urdf.xacro'"  />
+  
+
+  <!--Parameter to launch gui of the joint state publisher (I think it is deprecated and does nothing)-->
   <param
     name="use_gui"
     value="$(arg gui)" />
+
+
+  <!--Allows to move the joints in the rviz visualization-->
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"
     type="joint_state_publisher_gui" />
+
+  <!--Allows rviz to read the joint values-->
   <node
     name="robot_state_publisher"
     pkg="robot_state_publisher"
     type="robot_state_publisher" />
+
+  <!--Launches rviz-->
   <node
     name="rviz"
     pkg="rviz"

@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+#    oscar_mdb_server.py: Server to interface with the Long Term Memory of the Multilevel Darwinist Brain 
+#    Copyright (C) 2021  Emanuel Fallas (efallashdez@gmail.com)
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #ROS Imports
 import sys, rospy, moveit_commander
 from geometry_msgs.msg import Pose, Point, Quaternion, TransformStamped
@@ -25,8 +41,8 @@ from oscar_msgs.srv import GripperControl, GripperControlRequest, GripperControl
 from oscar_msgs.srv import Perception, PerceptionRequest, PerceptionResponse
 
 
-#Server to interface with the Long Term Memory of the Multilevel Darwinist Brain 
 
+#MAIN CLASS
 class OscarMDB:
     def __init__(self):
 
@@ -82,6 +98,7 @@ class OscarMDB:
         rospy.Subscriber("mdb/ltm/executed_policy", String, self.policy_callback)
         rospy.Subscriber("mdb/oscar/control", ControlMsg, self.reset_world_callback)
 
+    #Callback when MDB requests a policy
     def policy_callback(self, data):
         rospy.loginfo(f"Executing {data.data} policy...")
         self.update_perceptions()
@@ -90,6 +107,7 @@ class OscarMDB:
         self.update_reward()
         self.publish_perception()
 
+    #Callback when MDB requests a world reset
     def reset_world_callback(self, data):
         rospy.loginfo("Reseting World...")
         if data.command=="reset_world":
@@ -104,6 +122,8 @@ class OscarMDB:
             self.publish_perception()
         else:
             rospy.logfatal("ATTENTION/ACHTUNG: LTM COMMAND NOT RECOGNIZED")
+
+    ## POLICIES
 
     def grasp_right_policy(self):
         if not self.perception.obj_in_left_hand and not self.perception.obj_in_left_hand:
@@ -274,6 +294,9 @@ class OscarMDB:
         self.obj_in_left_hand=self.perception.obj_in_left_hand
         self.obj_in_right_hand=self.perception.obj_in_right_hand
 
+    ## POLICIES
+
+    #Reads if the object is in the basket
     def update_reward(self):
         rospy.loginfo("Reading Reward....")
 
@@ -287,13 +310,14 @@ class OscarMDB:
         delta_y=abs(basket_y-object_y)
 
         #Random reward for the moment
-        if delta_x<0.035 and delta_y<0.035:
+        if delta_x<0.043 and delta_y<0.043:
             self.reward=1
         else:
             self.reward=0
         #print(f"delta_x={delta_x}, delta_y={delta_y}")
         rospy.loginfo(f"Reward obtained: {self.reward}")
 
+    #Publishes perception in the corresponding topic
     def publish_perception(self):
         rospy.loginfo("Publishing Perceptions....")
 
@@ -306,8 +330,8 @@ class OscarMDB:
         #rospy.logdebug(f"Published perceptions: obj:{self.red_object}, bskt:{self.basket}, left_hand:{self.obj_in_left_hand}, right_hand:{self.obj_in_left_hand}, reward:{self.reward}")
 
 
-     
-    def bring_object_near(self): #Combinar bring_object_near y random_positions
+    #Used when press_button is used
+    def bring_object_near(self): #Combine bring_object_near y random_positions in single function
         basket_x=self.perception.basket.x
         basket_y=self.perception.basket.y
 
@@ -334,7 +358,8 @@ class OscarMDB:
         
         move_resp=self.move_object(obj_msg)
         rospy.logdebug(move_resp.status_message)
-        
+    
+    #Used in every world reset
     def random_positions(self):
         basket_x=np.random.uniform(low=0.25,high=0.35)
         basket_y=np.random.uniform(low=-0.55,high=0.55)
@@ -373,12 +398,15 @@ class OscarMDB:
         move_resp=self.move_object(obj_msg)
         rospy.logdebug(move_resp.status_message)
 
+    #Simple transformation to adapt data to MDB format
     @staticmethod
-    def cartesian_to_polar(point):
+    def cartesian_to_polar(point): 
         distance=np.sqrt(point.x*point.x+point.y*point.y)
         angle=np.arctan2(point.y, point.x)
         return distance, angle
 
+
+#MAIN PROGRAM: Creates OscarMDB object and spins thread
 if __name__ == "__main__":
     rospy.init_node('oscar_mdb_server', anonymous = False)
     rospy.loginfo("Started OSCAR MDB Server Node")

@@ -1,4 +1,4 @@
-#Message to control an arm to a position in the xyz space
+#Service message to control an arm to a position in the xyz space
 float32 x
 float32 y
 float32 z 

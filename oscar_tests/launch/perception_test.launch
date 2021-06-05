@@ -1,3 +1,10 @@
+<!-- perception_test.launch: Launches and configures a perception test-->
+<!-- OSCAR: Open Source Cognitive Applied Robot -->
+<!-- Author: Emanuel Fallas -->
+<!-- email: efallashdez@gmail.com -->
+<!-- Published under GNU GPLv3 license -->
+
+
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
 
