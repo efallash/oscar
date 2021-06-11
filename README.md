@@ -119,26 +119,73 @@ Download this repository and the [thor_simulator](https://github.com/efallash/th
 
 The MDB code is not published yet, you can contact the [GII](https://github.com/GII) if you need access. 
 
-
+After cloning the repositories build and re-source your workspace.
 
 ## Usage
 
 
 ### Robot bringup
-~Launch del robot y los parámetros posibles~
+Run the following line in a terminal to launch the robot in the table world:
+
+    roslaunch oscar_bringup oscar_table.launch
+
+You can also pass the following arguments to the launch file:
+
+- gui: Boolean to enable or disable the gazebo graphical interface.
+- controller_number: Selects the controller from the folder oscar_control/config.
+- load: Boolean to enable or disable a fixed load in the gripper (testing purposes).
+- mass: Float to select the mass of the fixed load in kg. 
 
 
 ### ROS API
-~Explicar los topics y servicios disponibles~
+Once you have launched the robot, the following services to control the robot are available:
 
+- /right_arm_command
+- /left_arm_command 
+- /close_right_gripper
+- /close_left_gripper
 
-### Running tests
-~Launch de los tests que existen y parámetros~
-~Se podría separar para cada test~
+To command the arms the following message is used:
 
+    float32 x
+    float32 y
+    float32 z 
+    float32 vel 
+    string named_pose
+    ---
+    bool plan
+    bool execute
+
+You can command a 3D point for the end effector, the server will choose automatically the orientation. The server returns the success of the planning and the execution.
+
+To command the grippers the following message is used:
+
+    bool close
+    ---
+    bool object
+
+With the message you ask the gripper to close with a boolean value. 
+
+Every service can be used via CLI using [rosservice](http://wiki.ros.org/rosservice).
+
+The camera data can be accesed in the following topics:
+
+- /kinect/depth/
+- /camera/rgb/
 
 ### Executing cognitive experiments
-~Launch del test y explicación del config.yaml~
+
+To execute the cognitive experiments it is necessary to have the MDB packages in the active workspace. Then, you can launch experiments with the following line:
+
+    roslaunch oscar_mdb ltm_oscar
+
+The experiment can be configurated by editing the file ltm_config_oscar.yaml contained in the oscar_mdb/config folder.
+
+## Acknowledgements
+
+Thanks to the members of the [LIANA](https://www.tec.ac.cr/unidades/laboratorio-inteligencia-artificial-ciencias-naturales-liana) for their support in this project. And thanks to the [GII](https://github.com/GII) for sharing their cognitive architecture.
+
+
 
 
 
