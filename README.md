@@ -98,7 +98,7 @@ Initialize the workspace:
     catkin init
     catkin build
 
-To use the workspace you must source its setup file everytime you open a terminal:
+To use the workspace you must source its setup file every time you open a terminal:
 
     source catkin_ws/devel/setup.bash
 
@@ -156,7 +156,12 @@ To command the arms the following message is used:
     bool plan
     bool execute
 
-You can command a 3D point for the end effector, the server will choose automatically the orientation. The server returns the success of the planning and the execution.
+You can command a 3D point for the end effector, the server will choose automatically the orientation. The server returns the success of the planning and the execution. Also, you can pass a float between 0 and 1 to select the execution speed, if vel=0 only the planning is made.
+
+The following named poses are available:
+
+- home: Ready position for picking objects.
+- upright: Every joint in their zero position.
 
 To command the grippers the following message is used:
 
