@@ -30,6 +30,96 @@ The ROS architecture of OSCAR is shown in the following diagram:
 
 ## Installation
 
+The following installation guide assumes a clean installation of Ubuntu 20.4 (Focal Fossa). 
+
+### Required packages
+
+Install ROS noetic following the instructions [here](http://wiki.ros.org/noetic/Installation/Ubuntu)
+
+Install MoveIt 1:
+    
+    sudo apt install ros-noetic-moveit
+
+Install ROS Control:
+
+    sudo apt-get install ros-noetic-ros-control ros-noetic-ros-controllers
+
+Install catkin_tools (RECOMMENDED):
+
+    sudo apt-get install python3-catkin-tools
+    sudo apt install python3-catkin-lint python3-pip
+    pip3 install osrf-pycommon
+
+### Required Python packages
+
+The required python packages can be installed using pip3:
+
+Pandas
+  
+    pip3 install pandas
+
+Scikit-Image
+
+    pip3 install scikit-image
+
+CameraTransform
+
+    pip3 install cameratransform
+
+The following Python packages are required by MDB:
+
+Yamlloader
+
+    pip3 install yamlloader
+
+Tensorflow
+
+    pip3 install --user --upgrade tensorflow
+
+Dash and Cytoscape
+
+    pip3 install dash
+    pip3 install dash-cytoscape
+
+Networkx
+
+    pip3 install networkx
+
+### Creating a catkin workspace
+
+ROS packages must be contained in a workspace to work properly. To create a workspace using catkin tools first you must create a empty folder in the home folder (recommended) generally called catkin_ws with a src folder:
+
+    cd
+    mkdir catkin_ws/src
+
+Initialize the workspace:
+
+    cd catkin_ws/
+    catkin init
+    catkin build
+
+To use the workspace you must source its setup file everytime you open a terminal:
+
+    source catkin_ws/devel/setup.bash
+
+Alternatively, you can add this line to .bashrc to avoid sourcing manually:
+
+    cd
+    echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+    source ~/.bashrc
+
+### Downloading the source code
+
+Download this repository and the [thor_simulator](https://github.com/efallash/thor_simulator) in the src folder of your workspace
+
+    cd
+    cd catkin_ws/src/
+    git clone https://github.com/efallash/oscar.git
+    git clone https://github.com/efallash/thor_simulator.git
+
+The MDB code is not published yet, you can contact the [GII](https://github.com/GII) if you need access. 
+
+
 
 ## Usage
 
