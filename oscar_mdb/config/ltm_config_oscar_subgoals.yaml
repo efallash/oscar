@@ -5,7 +5,7 @@
 
 #Experiment configuration
 Experiment:
-    subgoals: False
+    subgoals: True
     iterations: 3000
     period: 3000
     trials: 20 #Attempts without reward before a world reset is prompted
@@ -130,7 +130,6 @@ LTM:
                 data:
                     space: mdb_ltm.space.NormalCentroidPointBasedSpace
                     start: 0
-                    end: 3000
                     period: 3000
 
         Policy:

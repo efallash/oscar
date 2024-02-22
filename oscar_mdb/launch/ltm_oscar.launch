@@ -7,32 +7,48 @@
 
 <launch>
 
-    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
-    <arg name="backup" default="backup"/>
-    <arg name="log_level" default="DEBUG"/>
     <arg name="debug" default="False"/>
     <arg name="launch-prefix" default="" unless="$(arg debug)"/>
     <arg name="launch-prefix" default="winpdb" if="$(arg debug)"/>
-    <arg name="simulator" default="True"/>
-    <arg name="motiven" default="False"/>
-    <arg name="view" default="True"/>
-    <arg name="config_file" default="$(find oscar_mdb)/config/ltm_config_oscar.yaml"/>
-    <arg name="save_dir" default="$(find oscar_mdb)"/>
-    <arg name="standalone" default="False"/>
-    <arg name="standalone_arg" value="" unless="$(arg standalone)"/>
-    <arg name="standalone_arg" value="--standalone" if="$(arg standalone)"/>
-    <arg name="start_server" value="True"/>
+
     <rosparam file="$(find oscar_mdb)/config/ros_parameters_oscar.yaml"/>
+
+    <arg name="ltm" default="True"/>
+    <arg name="motiven" default="False"/>
+    <arg name="view" default="False"/>
+    <arg name="log_level" default="DEBUG"/>
+    
+
+    <arg name="save_dir" default="$(find oscar_mdb)"/>
+    <arg name="start_server" value="True"/>
+
 
     <!--Launches MDB (Currently not using the visualizartion)-->
     <group ns="mdb">
+        <arg name="use_random_seed" default="False"/>
+        <arg name="random_seed_arg" value="" unless="$(arg use_random_seed)"/>
+        <arg name="random_seed_arg" value="-rs $(arg random_seed)" if="$(arg use_random_seed)"/>
+        
+        <arg name="config_file" default="$(find oscar_mdb)/config/ltm_config_oscar.yaml"/>
+
+        <arg name="backup" default="backup"/>
+
+        <arg name="standalone" default="False"/>
+        <arg name="standalone_arg" value="" unless="$(arg standalone)"/>
+        <arg name="standalone_arg" value="--standalone" if="$(arg standalone)"/>
+
+        <node name="motiven" pkg="mdb_motiven" type="mdb_motiven" args="-b motiven.$(arg backup) -l $(arg log_level) $(arg standalone_arg)" launch-prefix="$(arg launch-prefix)" if="$(arg motiven)"/>
+
         <node pkg="mdb_ltm" type="mdb_ltm" name="ltm" args="-b ltm.$(arg backup) -s $(arg config_file) -l $(arg log_level)" launch-prefix="$(arg launch-prefix)" output="screen"/>
-        <!--<node pkg="mdb_view" type="mdb_view" name="view" args="-s $(arg config_file) -l $(arg log_level) -d $(arg save_dir)" launch-prefix="$(arg launch-prefix)" if="$(arg view)"/>-->
+
+        <arg name="save_dir" default="$(find mdb_view)" if="$(arg view)"/>
+        <node name="view" pkg="mdb_view" type="mdb_view" args="-s $(arg config_file) -l $(arg log_level) -d $(arg save_dir)" launch-prefix="$(arg launch-prefix)" if="$(arg view)"/>
+        
     </group>
 
     <!--Launches the perception server and the oscar_mdb_server-->
     <node pkg="oscar_perception" type="oscar_perception_services.py" name="oscar_perception_server" if="$(arg start_server)"/>
-    <node pkg="oscar_mdb" type="oscar_mdb_server.py" name="oscar_mdb_server" output="screen" if="$(arg start_server)"/>
+    <node pkg="oscar_mdb" type="hack_oscar_mdb_server.py" name="oscar_mdb_server" if="$(arg start_server)"/>
 
 
 </launch>
