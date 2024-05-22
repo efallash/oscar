@@ -6,6 +6,9 @@
 <!-- email: efallashdez@gmail.com -->
 <!-- Published under GNU GPLv3 license -->
 
+  <!-- see http://sdformat.org/spec?ver=1.11&elem=sensor for more information -->
+  <!-- see https://github.com/ros-simulation/gazebo_ros_pkgs/wiki for more information -->
+
   <!-- Control plugin --> 
   <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
@@ -20,7 +23,7 @@
         <image>
           <width>1280</width>
           <height>720</height>
-          <format>B8G8R8</format>
+          <format>R8G8B8</format>
         </image>
         <clip>
           <near>0.03</near>
@@ -35,30 +38,27 @@
           <stddev>0.007</stddev>
         </noise>
       </camera>
-      <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
-        <baseline>0.2</baseline>
-        <alwaysOn>true</alwaysOn>
-        <!-- Keep this zero, update_rate in the parent <sensor> tag
-             will control the frame rate. -->
-        <updateRate>20.0</updateRate>
+      <plugin name="depth_plugin" filename="libgazebo_ros_camera.so">
         <cameraName>kinect</cameraName>
+        <frameName>depth_optical_frame</frameName>
         <imageTopicName>/kinect/color/image_raw</imageTopicName>
         <cameraInfoTopicName>/kinect/color/camera_info</cameraInfoTopicName>
         <depthImageTopicName>/kinect/depth/image_raw</depthImageTopicName>
         <depthImageCameraInfoTopicName>/kinect/depth/camera_info</depthImageCameraInfoTopicName>
         <pointCloudTopicName>/kinect/depth/points</pointCloudTopicName>
-        <frameName>depth_optical_frame</frameName>
+
+        <ros>
+          <namespace>oscar</namespace>
+          <remapping>depth_camera/image_raw:=kinect/color/image_raw</remapping>
+          <remapping>depth_camera/depth/image_raw:=kinect/depth/image_raw</remapping>
+          <remapping>depth_camera/camera_info:=kinect/color/camera_info</remapping>
+          <remapping>depth_camera/depth/camera_info:=kinect/depth/camera_info</remapping>
+          <remapping>depth_camera/points:=kinect/depth/points</remapping>
+        </ros>
+
+        
         <pointCloudCutoff>0.05</pointCloudCutoff>
-        <distortionK1>0</distortionK1>
-        <distortionK2>0</distortionK2>
-        <distortionK3>0</distortionK3>
-        <distortionT1>0</distortionT1>
-        <distortionT2>0</distortionT2>
-        <CxPrime>0</CxPrime>
-        <Cx>0</Cx>
-        <Cy>0</Cy>
-        <focalLength>0</focalLength>
-        <hackBaseline>0</hackBaseline>
+        <hackBaseline>0.07</hackBaseline>
       </plugin>
     </sensor>
   </gazebo>
@@ -68,6 +68,7 @@
   <gazebo reference="rgb_camera_link">
     <sensor type="camera" name="camera_rgb">
       <update_rate>15.0</update_rate>
+      <always_on>0</always_on>
       <camera name="head">
         <horizontal_fov>1.085594795</horizontal_fov>
         <image>
@@ -89,18 +90,16 @@
         </noise>
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
         <cameraName>camera/rgb</cameraName>
+        <frameName>rgb_camera_link</frameName>
+        <ros>
+          <namespace>oscar</namespace>
+          <remapping>camera_rgb/image_raw:=camera/rgb/image_raw</remapping>
+          <remapping>camera_rgb/camera_info:=camera/rgb/camera_info</remapping>
+        </ros>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>rgb_camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
   </gazebo>
