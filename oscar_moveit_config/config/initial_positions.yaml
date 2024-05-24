@@ -1,0 +1,15 @@
+# Default initial positions for oscar's ros2_control fake system
+
+initial_positions:
+  left_arm_Art1_Yaw: 0
+  left_arm_Art2_Pitch: 0
+  left_arm_Art3_Pitch: 0
+  left_arm_Art4_Yaw: 0
+  left_arm_Art5_Pitch: 0
+  left_arm_Art6_Yaw: 0
+  right_arm_Art1_Yaw: 0
+  right_arm_Art2_Pitch: 0
+  right_arm_Art3_Pitch: 0
+  right_arm_Art4_Yaw: 0
+  right_arm_Art5_Pitch: 0
+  right_arm_Art6_Yaw: 0

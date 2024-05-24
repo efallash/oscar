@@ -10,81 +10,61 @@ default_acceleration_scaling_factor: 0.1
 joint_limits:
   left_arm_Art1_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   left_arm_Art2_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   left_arm_Art3_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   left_arm_Art4_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   left_arm_Art5_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   left_arm_Art6_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_arm_finger1_prismatic:
-    has_velocity_limits: true
-    max_velocity: 0.1
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_arm_finger2_prismatic:
-    has_velocity_limits: true
-    max_velocity: 0.1
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art1_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art2_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art3_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art4_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art5_Pitch:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0
   right_arm_Art6_Yaw:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_arm_finger1_prismatic:
-    has_velocity_limits: true
-    max_velocity: 0.1
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_arm_finger2_prismatic:
-    has_velocity_limits: true
-    max_velocity: 0.1
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 10.0
+    has_acceleration_limits: true
+    max_acceleration: 100.0

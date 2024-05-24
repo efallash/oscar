@@ -1,11 +1,25 @@
 moveit_setup_assistant_config:
-  URDF:
+  urdf:
     package: oscar_description
     relative_path: urdf/oscar.urdf.xacro
-    xacro_args: ""
-  SRDF:
+  srdf:
     relative_path: config/oscar.srdf
-  CONFIG:
-    author_name: Emanuel Fallas
+  package_settings:
+    author_name: efallash
     author_email: efallashdez@gmail.com
-    generated_timestamp: 1617829116
+    generated_timestamp: 1716559821
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

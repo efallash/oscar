@@ -48,7 +48,7 @@ def generate_launch_description():
         'worlds',
         'table.world'
     )
-    gzserver_args={'world': world, 'verbose': 'true', 'server_required':'true'}.items()
+    gzserver_args={'world': world, 'verbose': 'false', 'server_required':'true'}.items()
     gzclient_args={}.items()
     #Gazebo client
     gzserver_cmd = IncludeLaunchDescription(

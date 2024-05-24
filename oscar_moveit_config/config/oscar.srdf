@@ -10,32 +10,26 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="left_arm">
-        <joint name="left_arm_Art1_Yaw"/>
-        <joint name="left_arm_Art2_Pitch"/>
-        <joint name="left_arm_Art3_Pitch"/>
-        <joint name="left_arm_Art4_Yaw"/>
-        <joint name="left_arm_Art5_Pitch"/>
-        <joint name="left_arm_Art6_Yaw"/>
-        <joint name="left_arm_gripper_to_arm"/>
-        <joint name="left_arm_gripper_to_base"/>
+        <link name="left_arm_base_link"/>
+        <link name="left_arm_Art1_Link"/>
+        <link name="left_arm_Art2_Link"/>
+        <link name="left_arm_Art3_Link"/>
+        <link name="left_arm_Art4_Link"/>
+        <link name="left_arm_Art5_Link"/>
+        <link name="left_arm_Art6_Link"/>
+        <link name="left_arm_gripper_base"/>
+        <link name="left_arm_gripper_link"/>
     </group>
     <group name="right_arm">
-        <joint name="right_arm_Art1_Yaw"/>
-        <joint name="right_arm_Art2_Pitch"/>
-        <joint name="right_arm_Art3_Pitch"/>
-        <joint name="right_arm_Art4_Yaw"/>
-        <joint name="right_arm_Art5_Pitch"/>
-        <joint name="right_arm_Art6_Yaw"/>
-        <joint name="right_arm_gripper_to_arm"/>
-        <joint name="right_arm_gripper_to_base"/>
-    </group>
-    <group name="left_gripper">
-        <joint name="left_arm_finger1_prismatic"/>
-        <joint name="left_arm_finger2_prismatic"/>
-    </group>
-    <group name="right_gripper">
-        <joint name="right_arm_finger2_prismatic"/>
-        <joint name="right_arm_finger1_prismatic"/>
+        <link name="right_arm_base_link"/>
+        <link name="right_arm_Art1_Link"/>
+        <link name="right_arm_Art2_Link"/>
+        <link name="right_arm_Art3_Link"/>
+        <link name="right_arm_Art4_Link"/>
+        <link name="right_arm_Art5_Link"/>
+        <link name="right_arm_Art6_Link"/>
+        <link name="right_arm_gripper_base"/>
+        <link name="right_arm_gripper_link"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="upright" group="left_arm">
@@ -54,14 +48,6 @@
         <joint name="right_arm_Art5_Pitch" value="0"/>
         <joint name="right_arm_Art6_Yaw" value="3.1415"/>
     </group_state>
-    <group_state name="home" group="left_arm">
-        <joint name="left_arm_Art1_Yaw" value="0"/>
-        <joint name="left_arm_Art2_Pitch" value="-0.5236"/>
-        <joint name="left_arm_Art3_Pitch" value="1.0472"/>
-        <joint name="left_arm_Art4_Yaw" value="0"/>
-        <joint name="left_arm_Art5_Pitch" value="1.0472"/>
-        <joint name="left_arm_Art6_Yaw" value="3.1415"/>
-    </group_state>
     <group_state name="home" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0"/>
         <joint name="right_arm_Art2_Pitch" value="-0.5236"/>
@@ -70,90 +56,17 @@
         <joint name="right_arm_Art5_Pitch" value="1.0472"/>
         <joint name="right_arm_Art6_Yaw" value="3.1415"/>
     </group_state>
-    <group_state name="closed" group="left_gripper">
-        <joint name="left_arm_finger1_prismatic" value="0"/>
-        <joint name="left_arm_finger2_prismatic" value="0"/>
-    </group_state>
-    <group_state name="closed" group="right_gripper">
-        <joint name="right_arm_finger1_prismatic" value="0"/>
-        <joint name="right_arm_finger2_prismatic" value="0"/>
-    </group_state>
-    <group_state name="open" group="right_gripper">
-        <joint name="right_arm_finger1_prismatic" value="0.02"/>
-        <joint name="right_arm_finger2_prismatic" value="0.02"/>
-    </group_state>
-    <group_state name="open" group="left_gripper">
-        <joint name="left_arm_finger1_prismatic" value="0.02"/>
-        <joint name="left_arm_finger2_prismatic" value="0.02"/>
-    </group_state>
-    <!--Poses for switch_hands policy-->
-    <group_state name="switch_collect" group="right_arm">
-        <joint name="right_arm_Art1_Yaw" value="0.8969325302943776"/>
-        <joint name="right_arm_Art2_Pitch" value="0.0974234832433967"/>
-        <joint name="right_arm_Art3_Pitch" value="0.7393236621158183"/>
-        <joint name="right_arm_Art4_Yaw" value="0.8737903663403516"/>
-        <joint name="right_arm_Art5_Pitch" value="0.9512267668677589"/>
-        <joint name="right_arm_Art6_Yaw" value="4.105971187052884"/>
-    </group_state>
-    <group_state name="pre_switch_collect" group="right_arm">
-        <joint name="right_arm_Art1_Yaw" value="0.6460016064545374"/>
-        <joint name="right_arm_Art2_Pitch" value="-0.11982900540120307"/>
-        <joint name="right_arm_Art3_Pitch" value="0.9531994535243485"/>
-        <joint name="right_arm_Art4_Yaw" value="1.1018132661905757"/>
-        <joint name="right_arm_Art5_Pitch" value="1.108349588811049"/>
-        <joint name="right_arm_Art6_Yaw" value="3.9918719636210382"/>
-    </group_state>
-    <group_state name="switch_give" group="right_arm">
-        <joint name="right_arm_Art1_Yaw" value="0.8969325302943776"/>
-        <joint name="right_arm_Art2_Pitch" value="0.0974234832433967"/>
-        <joint name="right_arm_Art3_Pitch" value="0.7393236621158183"/>
-        <joint name="right_arm_Art4_Yaw" value="0.8737903663403516"/>
-        <joint name="right_arm_Art5_Pitch" value="0.9512267668677589"/>
-        <joint name="right_arm_Art6_Yaw" value="2.53517486"/>
-    </group_state>
-    <group_state name="post_switch_give" group="right_arm">
-        <joint name="right_arm_Art1_Yaw" value="0.6460016064545374"/>
-        <joint name="right_arm_Art2_Pitch" value="-0.11982900540120307"/>
-        <joint name="right_arm_Art3_Pitch" value="0.9531994535243485"/>
-        <joint name="right_arm_Art4_Yaw" value="1.1018132661905757"/>
-        <joint name="right_arm_Art5_Pitch" value="1.108349588811049"/>
-        <joint name="right_arm_Art6_Yaw" value="2.421075637"/>
-    </group_state>
-    <group_state name="switch_give" group="left_arm">
-        <joint name="left_arm_Art1_Yaw" value="-0.8967881121299165"/>
-        <joint name="left_arm_Art2_Pitch" value="0.0978127288780482"/>
-        <joint name="left_arm_Art3_Pitch" value="0.738893223675821"/>
-        <joint name="left_arm_Art4_Yaw" value="-0.8740896640661895"/>
-        <joint name="left_arm_Art5_Pitch" value="0.9518139630622138"/>
-        <joint name="left_arm_Art6_Yaw" value="-2.536013297623155"/>
-    </group_state>
-    <group_state name="post_switch_give" group="left_arm">
-        <joint name="left_arm_Art1_Yaw" value="-0.6457507281767881"/>
-        <joint name="left_arm_Art2_Pitch" value="-0.11963914739200998"/>
-        <joint name="left_arm_Art3_Pitch" value="0.9525172817951881"/>
-        <joint name="left_arm_Art4_Yaw" value="-1.101429541412672"/>
-        <joint name="left_arm_Art5_Pitch" value="1.109008670516036"/>
-        <joint name="left_arm_Art6_Yaw" value="-2.4200419257857213"/>
-    </group_state>
-    <group_state name="switch_collect" group="left_arm">
-        <joint name="left_arm_Art1_Yaw" value="-0.8967881121299165"/>
-        <joint name="left_arm_Art2_Pitch" value="0.0978127288780482"/>
-        <joint name="left_arm_Art3_Pitch" value="0.738893223675821"/>
-        <joint name="left_arm_Art4_Yaw" value="-0.8740896640661895"/>
-        <joint name="left_arm_Art5_Pitch" value="0.9518139630622138"/>
-        <joint name="left_arm_Art6_Yaw" value="-4.106809624"/>
-    </group_state>
-    <group_state name="pre_switch_collect" group="left_arm">
-        <joint name="left_arm_Art1_Yaw" value="-0.6457507281767881"/>
-        <joint name="left_arm_Art2_Pitch" value="-0.11963914739200998"/>
-        <joint name="left_arm_Art3_Pitch" value="0.9525172817951881"/>
-        <joint name="left_arm_Art4_Yaw" value="-1.101429541412672"/>
-        <joint name="left_arm_Art5_Pitch" value="1.109008670516036"/>
-        <joint name="left_arm_Art6_Yaw" value="-3.990838253"/>
+    <group_state name="home" group="left_arm">
+        <joint name="left_arm_Art1_Yaw" value="0"/>
+        <joint name="left_arm_Art2_Pitch" value="-0.5236"/>
+        <joint name="left_arm_Art3_Pitch" value="1.0472"/>
+        <joint name="left_arm_Art4_Yaw" value="0"/>
+        <joint name="left_arm_Art5_Pitch" value="1.0472"/>
+        <joint name="left_arm_Art6_Yaw" value="3.1415"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="left_gripper" parent_link="left_arm_gripper_link" group="left_gripper" parent_group="left_arm"/>
-    <end_effector name="right_gripper" parent_link="right_arm_gripper_link" group="right_gripper" parent_group="right_arm"/>
+    <end_effector name="left_gripper" parent_link="left_arm_gripper_link" group="left_arm"/>
+    <end_effector name="right_gripper" parent_link="right_arm_gripper_link" group="right_arm"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="depth_camera_link" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="left_arm_Art1_Link" reason="Never"/>
@@ -168,7 +81,12 @@
     <disable_collisions link1="depth_camera_link" link2="left_arm_Art5_Link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="left_arm_Art6_Link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="left_arm_base_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="left_arm_finger1_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="left_arm_finger2_link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="left_arm_gripper_base" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="left_arm_gripper_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="left_arm_rubber1" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="left_arm_rubber2" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="rgb_camera_link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="right_arm_Art1_Link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="right_arm_Art2_Link" reason="Never"/>
@@ -177,7 +95,12 @@
     <disable_collisions link1="depth_camera_link" link2="right_arm_Art5_Link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="right_arm_Art6_Link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="right_arm_base_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="right_arm_finger1_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="right_arm_finger2_link" reason="Never"/>
     <disable_collisions link1="depth_camera_link" link2="right_arm_gripper_base" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="right_arm_gripper_link" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="right_arm_rubber1" reason="Never"/>
+    <disable_collisions link1="depth_camera_link" link2="right_arm_rubber2" reason="Never"/>
     <disable_collisions link1="left_arm_Art1_Link" link2="left_arm_Art2_Link" reason="Adjacent"/>
     <disable_collisions link1="left_arm_Art1_Link" link2="left_arm_Art3_Link" reason="Never"/>
     <disable_collisions link1="left_arm_Art1_Link" link2="left_arm_Art4_Link" reason="Never"/>
@@ -294,6 +217,8 @@
     <disable_collisions link1="left_arm_gripper_link" link2="rgb_camera_link" reason="Never"/>
     <disable_collisions link1="left_arm_rubber1" link2="left_arm_rubber2" reason="Never"/>
     <disable_collisions link1="left_arm_rubber1" link2="rgb_camera_link" reason="Never"/>
+    <disable_collisions link1="left_arm_rubber1" link2="right_arm_finger2_link" reason="Never"/>
+    <disable_collisions link1="left_arm_rubber1" link2="right_arm_rubber2" reason="Never"/>
     <disable_collisions link1="left_arm_rubber2" link2="rgb_camera_link" reason="Never"/>
     <disable_collisions link1="left_arm_rubber2" link2="right_arm_finger2_link" reason="Never"/>
     <disable_collisions link1="left_arm_rubber2" link2="right_arm_rubber2" reason="Never"/>
