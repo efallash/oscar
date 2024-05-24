@@ -1,0 +1,135 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+    use_sim_time: true
+
+    left_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    right_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    left_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    right_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+#Left arm
+left_arm_controller:
+  ros__parameters:
+    joints:
+      - left_arm_Art1_Yaw
+      - left_arm_Art2_Pitch
+      - left_arm_Art3_Pitch
+      - left_arm_Art4_Yaw
+      - left_arm_Art5_Pitch
+      - left_arm_Art6_Yaw
+    
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+
+
+    gains:
+      left_arm_Art1_Yaw: {p: 1000.0, i: 0.0, d: 5.0, i_clamp: 100.0}
+
+      left_arm_Art2_Pitch: {p: 2000.0, i: 1000.0, d: 5.0, i_clamp: 7.0}
+
+      left_arm_Art3_Pitch: {p: 100.0, i: 1000.0, d: 5.0, i_clamp: 7.0}
+
+      left_arm_Art4_Yaw: {p: 200.0, i: 10.0, d: 1.0, i_clamp: 1.0}
+
+      left_arm_Art5_Pitch: {p: 20.0, i: 10.0, d: 0.0, i_clamp: 5.0}
+
+      left_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0}
+
+left_gripper_controller:
+  ros__parameters:
+
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    joints:
+      - left_arm_finger1_prismatic 
+      - left_arm_finger2_prismatic
+
+    constraints:
+      left_arm_finger1_prismatic: 
+        goal: 0.05
+        trajectory: 0.05
+
+      left_arm_finger2_prismatic: 
+        goal: 0.05
+        trajectory: 0.05
+
+      
+    gains: # Required because we're controlling an effort interface
+      left_arm_finger1_prismatic : {p: 300.0,  d: 0.1, i: 10.0, i_clamp: 0.25, antiwindup: true}
+      left_arm_finger2_prismatic : {p: 300.0,  d: 0.1, i: 10.0, i_clamp: 0.25, antiwindup: true} 
+
+#Right arm
+right_arm_controller:
+  ros__parameters:
+    joints:
+      - right_arm_Art1_Yaw
+      - right_arm_Art2_Pitch
+      - right_arm_Art3_Pitch
+      - right_arm_Art4_Yaw
+      - right_arm_Art5_Pitch
+      - right_arm_Art6_Yaw
+    
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+
+
+    gains:
+      right_arm_Art1_Yaw: {p: 1000.0, i: 0.0, d: 5.0, i_clamp: 100.0}
+
+      right_arm_Art2_Pitch: {p: 2000.0, i: 1000.0, d: 5.0, i_clamp: 7.0}
+
+      right_arm_Art3_Pitch: {p: 100.0, i: 1000.0, d: 5.0, i_clamp: 7.0}
+
+      right_arm_Art4_Yaw: {p: 200.0, i: 10.0, d: 1.0, i_clamp: 1.0}
+
+      right_arm_Art5_Pitch: {p: 20.0, i: 10.0, d: 0.0, i_clamp: 5.0}
+
+      right_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0}
+
+right_gripper_controller:
+  ros__parameters:
+
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    joints:
+      - right_arm_finger1_prismatic 
+      - right_arm_finger2_prismatic
+
+    constraints:
+      right_arm_finger1_prismatic: 
+        goal: 0.05
+        trajectory: 0.05
+
+      right_arm_finger2_prismatic: 
+        goal: 0.05
+        trajectory: 0.05
+
+      
+    gains: # Required because we're controlling an effort interface
+      right_arm_finger1_prismatic : {p: 300.0,  d: 0.1, i: 10.0, i_clamp: 0.25, antiwindup: true}
+      right_arm_finger2_prismatic : {p: 300.0,  d: 0.1, i: 10.0, i_clamp: 0.25, antiwindup: true} 
+
+      

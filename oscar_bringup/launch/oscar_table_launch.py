@@ -3,10 +3,9 @@ import os
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
 
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
-from launch.event_handlers import (OnProcessStart, OnProcessExit)
+from launch.actions import AppendEnvironmentVariable, IncludeLaunchDescription
+
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.actions import AppendEnvironmentVariable
 
 
 from launch_ros.actions import Node
@@ -49,7 +48,7 @@ def generate_launch_description():
         'worlds',
         'table.world'
     )
-    gzserver_args={'world': world, 'verbose': 'false', 'server_required':'true'}.items()
+    gzserver_args={'world': world, 'verbose': 'true', 'server_required':'true'}.items()
     gzclient_args={}.items()
     #Gazebo client
     gzserver_cmd = IncludeLaunchDescription(
@@ -81,25 +80,6 @@ def generate_launch_description():
         parameters=[params]
     )
 
-    """
-    load_joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
-        output='screen'
-    )
-
-    load_arm_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'arm_controller'],
-        output='screen'
-    )
-
-    load_gripper_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'gripper_controller'],
-        output='screen'
-    )
-    """
-
-
     #Spawn Gazebo
     spawn_entity = Node(
         package='gazebo_ros',
@@ -109,16 +89,10 @@ def generate_launch_description():
         output='screen'
     )
 
-    """
-    joint_state_event=RegisterEventHandler(
-        event_handler=OnProcessExit(target_action=spawn_entity, 
-                                    on_exit=[load_joint_state_broadcaster]))
-    
-    load_controllers_event=RegisterEventHandler(
-        event_handler=OnProcessExit(target_action=load_joint_state_broadcaster, 
-                                    on_exit=[load_arm_controller,load_gripper_controller]))
-    
-    """
+    #Load controllers
+    controllers_launch_path=os.path.join(get_package_share_directory('oscar_control'), 'launch', 'oscar_control_launch.py')
+    load_controllers= IncludeLaunchDescription(PythonLaunchDescriptionSource(controllers_launch_path))
+
 
     ld= LaunchDescription()
     ld.add_action(set_env_vars_resources_gripper)
@@ -127,12 +101,8 @@ def generate_launch_description():
     ld.add_action(set_env_vars_resources_oscar_gazebo)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
-
-
-    #ld.add_action(joint_state_event)
-    #ld.add_action(load_controllers_event)
     ld.add_action(node_robot_state_publisher)
-
     ld.add_action(spawn_entity)
+    ld.add_action(load_controllers)
 
     return ld

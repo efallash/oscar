@@ -1,17 +1,16 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<!-- oscar.gazebo: Gazebo plugins and properties for OSCAR robot-->
-<!-- OSCAR: Open Source Cognitive Applied Robot -->
-<!-- Author: Emanuel Fallas -->
-<!-- email: efallashdez@gmail.com -->
+<!-- oscar.gazebo Gazebo plugins and properties for OSCAR robot-->
+<!-- OSCAR Open Source Cognitive Applied Robot -->
+<!-- Author Emanuel Fallas -->
+<!-- email efallashdez@gmail.com -->
 <!-- Published under GNU GPLv3 license -->
-
-  <!-- see http://sdformat.org/spec?ver=1.11&elem=sensor for more information -->
-  <!-- see https://github.com/ros-simulation/gazebo_ros_pkgs/wiki for more information -->
 
   <!-- Control plugin --> 
   <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+          <parameters>$(find oscar_control)/config/oscar_controllers.yaml</parameters>
+        </plugin>
   </gazebo>
 
   <!-- Depth Camera Plugin -->
@@ -33,7 +32,7 @@
           <type>gaussian</type>
           <!-- Noise is sampled independently per pixel on each frame.
                That pixel's noise value is added to each of its color
-               channels, which at that point lie in the range [0,1]. -->
+               channels, which at that point lie in the range 0,1. -->
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>
@@ -84,7 +83,7 @@
           <type>gaussian</type>
           <!-- Noise is sampled independently per pixel on each frame.
                That pixel's noise value is added to each of its color
-               channels, which at that point lie in the range [0,1]. -->
+               channels, which at that point lie in the range 0,1. -->
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>

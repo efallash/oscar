@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- oscar.urdf.xacro: Loads oscar robot and allows to put a fixed load in the arms-->
-<!-- OSCAR: Open Source Cognitive Applied Robot -->
-<!-- Author: Emanuel Fallas -->
-<!-- email: efallashdez@gmail.com -->
+<!-- oscar.urdf.xacro Loads oscar robot and allows to put a fixed load in the arms-->
+<!-- OSCAR Open Source Cognitive Applied Robot -->
+<!-- Author Emanuel Fallas -->
+<!-- email efallashdez@gmail.com -->
 <!-- Published under GNU GPLv3 license -->
 
 
