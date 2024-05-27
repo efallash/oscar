@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""
+Wrapper for using the moveit_py API with the OSCAR Robot.
+"""
+
+import time
+import threading
+
+# generic ros libraries
+import rclpy
+from rclpy.logging import get_logger
+from rclpy.node import Node
+from rclpy.action import ActionClient
+
+# moveit python library
+from moveit.core.robot_state import RobotState 
+from moveit.planning import (
+    MoveItPy,
+    MultiPipelinePlanRequestParameters, 
+#    TrajectoryExecutionManager
+)
+
+
+from geometry_msgs.msg import PoseStamped
+from control_msgs.action import FollowJointTrajectory
+from trajectory_msgs.msg import JointTrajectoryPoint
+from tf_transformations import euler_from_quaternion
+
+class Thor():
+    def __init__(self, node: Node, name='moveit_py'):
+
+        self.logger = get_logger(f'oscar.{name}')
+        # instantiate MoveItPy instance and get planning component
+        self.oscar = MoveItPy(node_name=name)
+        
+        #Create objects for the arms and grippers
+        self.arms={}
+        self.grippers={}
+        self.gripper_goal_msgs={}
+
+        #Populate arms and grippers
+        self.arms['right'] = self.oscar.get_planning_component("right_arm")
+        self.arms['left'] = self.oscar.get_planning_component("left_arm")
+        self.grippers['right'] = ActionClient(node, FollowJointTrajectory, '/right_gripper_controller/follow_joint_trajectory')
+        self.grippers['left'] = ActionClient(node, FollowJointTrajectory, '/left_gripper_controller/follow_joint_trajectory')
+        self.gripper_goal_msgs['right']=FollowJointTrajectory.Goal()
+        self.gripper_goal_msgs['left']=FollowJointTrajectory.Goal()
+        self.gripper_goal_msgs['right'].trajectory.joint_names=['right_arm_finger1_prismatic', 'right_arm_finger2_prismatic']
+        self.gripper_goal_msgs['left'].trajectory.joint_names=['left_arm_finger1_prismatic', 'left_arm_finger2_prismatic']
+        self.logger.info("MoveItPy instance created")
+        
+    def close_gripper(self, arm, sleep_time=0):
+        point=JointTrajectoryPoint()
+        point.positions=[0.0, 0.0]
+        if arm=='left' or arm=='right':
+            goal_msg=self.gripper_goal_msgs[arm]
+            gripper=self.grippers[arm]
+        else:
+            self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
+            return False
+        goal_msg.trajectory.points=[point]
+        gripper.send_goal_async(goal_msg)
+        self.logger.info("Closing gripper")
+        time.sleep(sleep_time)
+        return True
+    
+    def open_gripper(self, arm, sleep_time=0):
+        point=JointTrajectoryPoint()
+        point.positions=[0.02, 0.02]
+        if arm=='left' or arm=='right':
+            goal_msg=self.gripper_goal_msgs[arm]
+            gripper=self.grippers[arm]
+        else:
+            self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
+            return False
+        goal_msg.trajectory.points=[point]
+        gripper.send_goal_async(goal_msg)
+        self.logger.info("Opening gripper")
+        time.sleep(sleep_time)
+        return True
+
+    def arm_go_to_named_pose(self, arm, pose_name, sleep_time=0): #TODO: Add acceleration and velocity scaling to all methods
+        if arm=='left' or arm=='right':
+            thor_arm=self.arms[arm]
+        else:
+            self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
+            return False
+        thor_arm.set_start_state_to_current_state()
+        thor_arm.set_goal_state(configuration_name=pose_name)
+        self.logger.info(f"Moving to pose: {pose_name}")
+        return self.plan_and_execute(self.oscar, thor_arm, self.logger, sleep_time=sleep_time)
+
+    def arm_go_to_pose(self, arm, pose: PoseStamped, sleep_time=0): #Continue here
+        self.thor_arm.set_start_state_to_current_state()
+        self.thor_arm.set_goal_state(pose_stamped_msg=pose, pose_link="thor_gripper_link")
+        angles=euler_from_quaternion([pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w])
+        self.logger.info(f'Moving to pose x: {pose.pose.position.x} y: {pose.pose.position.y} z: {pose.pose.position.z} r: {angles[0]} p: {angles[1]} y: {angles[2]}')
+        return self.plan_and_execute(self.thor,self.thor_arm,self.logger, sleep_time=sleep_time)
+
+    def arm_go_to_random_pose(self, arm, sleep_time=0):
+        self.thor_arm.set_start_state_to_current_state()
+        # instantiate a RobotState instance using the current robot model
+        robot_model = self.thor.get_robot_model()
+        robot_state = RobotState(robot_model)
+        robot_state.set_to_random_positions()
+        self.thor_arm.set_goal_state(robot_state=robot_state)
+        self.logger.info("Moving to random joint positions")
+        return self.plan_and_execute(self.thor,self.thor_arm,self.logger, sleep_time=sleep_time)
+
+    def plan(self,
+        planning_component,
+        logger,
+        single_plan_parameters=None,
+        multi_plan_parameters=None
+        ):
+        """Helper function to plan and execute a motion."""
+        # plan to goal
+        logger.info("Planning trajectory")
+        if multi_plan_parameters is not None:
+            plan_result = planning_component.plan(
+                multi_plan_parameters=multi_plan_parameters
+            )
+        elif single_plan_parameters is not None:
+            plan_result = planning_component.plan(
+                single_plan_parameters=single_plan_parameters
+            )
+        else:
+            plan_result = planning_component.plan() #TODO: Add moveit.planning.PlanRequestParameters to control 
+        return plan_result
+
+    def execute(self,
+        robot: MoveItPy,
+        logger,
+        plan_result,
+        sleep_time=0.0        
+        ):
+        # execute the plan
+        logger.info("Executing plan")
+        robot_trajectory = plan_result.trajectory
+        result=robot.execute(robot_trajectory, controllers=[])
+        time.sleep(sleep_time)
+        return result
+    
+    def plan_and_execute(self,
+        robot,
+        planning_component,
+        logger,
+        single_plan_parameters=None,
+        multi_plan_parameters=None,
+        sleep_time=0.0,
+    ):
+        
+        logger.info('Planning and executing')
+        plan_result=self.plan(planning_component,logger,single_plan_parameters,multi_plan_parameters)
+
+        if plan_result:
+            execute_result=self.execute(robot,logger,plan_result,sleep_time)
+        else:
+            logger.error('Planning failed')
+            return (False, 'PLAN_FAILED')
+        
+        if execute_result:
+            
+            if execute_result.status=='SUCCEEDED':
+                logger.info(f'EXECUTION SUCCEEDED')
+                return (True, '')
+            
+            elif execute_result.status=='RUNNING':
+                logger.info(f'EXECUTING')
+                time.sleep(2)
+                return (False, 'EXCEED_EXEC_TIME')
+            else:
+
+                logger.error(f'EXECUTION FAILED, code: {execute_result.status}')
+                return (False, execute_result.status)
+    def shutdown(self):
+        self.thor.shutdown()
