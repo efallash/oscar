@@ -43,7 +43,7 @@ left_arm_controller:
 
       left_arm_Art5_Pitch: {p: 20.0, i: 10.0, d: 0.0, i_clamp: 5.0}
 
-      left_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0}
+      left_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0, angle_wraparound: true}
 
 left_gripper_controller:
   ros__parameters:
@@ -102,7 +102,7 @@ right_arm_controller:
 
       right_arm_Art5_Pitch: {p: 20.0, i: 10.0, d: 0.0, i_clamp: 5.0}
 
-      right_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0}
+      right_arm_Art6_Yaw: {p: 100.0, i: 10.0, d: 0.0, i_clamp: 10.0, angle_wraparound: true}
 
 right_gripper_controller:
   ros__parameters:

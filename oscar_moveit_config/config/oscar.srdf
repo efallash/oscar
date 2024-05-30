@@ -38,7 +38,7 @@
         <joint name="left_arm_Art3_Pitch" value="0"/>
         <joint name="left_arm_Art4_Yaw" value="0"/>
         <joint name="left_arm_Art5_Pitch" value="0"/>
-        <joint name="left_arm_Art6_Yaw" value="3.1415"/>
+        <joint name="left_arm_Art6_Yaw" value="0"/>
     </group_state>
     <group_state name="upright" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0"/>
@@ -46,7 +46,7 @@
         <joint name="right_arm_Art3_Pitch" value="0"/>
         <joint name="right_arm_Art4_Yaw" value="0"/>
         <joint name="right_arm_Art5_Pitch" value="0"/>
-        <joint name="right_arm_Art6_Yaw" value="3.1415"/>
+        <joint name="right_arm_Art6_Yaw" value="0"/>
     </group_state>
     <group_state name="home" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0"/>
@@ -54,7 +54,7 @@
         <joint name="right_arm_Art3_Pitch" value="1.0472"/>
         <joint name="right_arm_Art4_Yaw" value="0"/>
         <joint name="right_arm_Art5_Pitch" value="1.0472"/>
-        <joint name="right_arm_Art6_Yaw" value="3.1415"/>
+        <joint name="right_arm_Art6_Yaw" value="0"/>
     </group_state>
     <group_state name="home" group="left_arm">
         <joint name="left_arm_Art1_Yaw" value="0"/>
@@ -62,7 +62,7 @@
         <joint name="left_arm_Art3_Pitch" value="1.0472"/>
         <joint name="left_arm_Art4_Yaw" value="0"/>
         <joint name="left_arm_Art5_Pitch" value="1.0472"/>
-        <joint name="left_arm_Art6_Yaw" value="3.1415"/>
+        <joint name="left_arm_Art6_Yaw" value="0"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="left_gripper" parent_link="left_arm_gripper_link" group="left_arm"/>

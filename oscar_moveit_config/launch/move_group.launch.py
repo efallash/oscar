@@ -20,10 +20,20 @@ from moveit_configs_utils.launch_utils import (
 from moveit_configs_utils import MoveItConfigsBuilder
 
 
-
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("oscar", package_name="oscar_moveit_config").to_moveit_configs()
+    moveit_config = (
+        MoveItConfigsBuilder("oscar", package_name="oscar_moveit_config")
+        .robot_description(file_path="config/oscar.urdf.xacro")
+        .robot_description_kinematics()
+        .trajectory_execution(file_path="config/moveit_controllers.yaml")
+        .planning_pipelines(
+            pipelines=["ompl"],
+            default_planning_pipeline="ompl",
+        )
+        .to_moveit_configs()
+    )
     return generate_move_group_launch(moveit_config)
+
 
 def generate_move_group_launch(moveit_config):
     ld = LaunchDescription()
@@ -63,7 +73,9 @@ def generate_move_group_launch(moveit_config):
         "publish_state_updates": should_publish,
         "publish_transforms_updates": should_publish,
         "monitor_dynamics": False,
-        "use_sim_time": ParameterValue(LaunchConfiguration("use_sim_time"), value_type=bool)
+        "use_sim_time": ParameterValue(
+            LaunchConfiguration("use_sim_time"), value_type=bool
+        ),
     }
 
     move_group_params = [
