@@ -26,7 +26,7 @@ from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 from tf_transformations import euler_from_quaternion
 
-class Thor():
+class Oscar():
     def __init__(self, node: Node, name='moveit_py'):
 
         self.logger = get_logger(f'oscar.{name}')
@@ -39,7 +39,7 @@ class Thor():
         self.grippers = {}
         self.gripper_goal_msgs = {}
 
-        # Populate arms and grippers
+        # Populate arms and grippers #TODO: Add support for controlling both arms in a single group
         self.arms['right'] = self.oscar.get_planning_component("right_arm")
         self.arms['left'] = self.oscar.get_planning_component("left_arm")
         self.gripper_links['right'] = 'right_arm_gripper_link'
@@ -175,3 +175,64 @@ class Thor():
                 return (False, execute_result.status)
     def shutdown(self):
         self.thor.shutdown()
+
+
+def main():
+
+    ###################################################################
+    # MoveItPy Setup
+    ###################################################################
+    rclpy.init()
+    node=Node('oscar_test_node')
+    oscar_moveit_py=Oscar(node)
+    logger=node.get_logger()
+    spin_thread=threading.Thread(target=rclpy.spin, args=(node,))
+    spin_thread.start()
+    ###########################################################################
+    # Plan 1 - set states with predefined string
+    ###########################################################################
+
+    logger.info('Moving to pose "home" and closing grippers...')
+    oscar_moveit_py.arm_go_to_named_pose('left', 'home')
+    oscar_moveit_py.arm_go_to_named_pose('right', 'home')
+    oscar_moveit_py.close_gripper('left')
+    oscar_moveit_py.close_gripper('right')
+
+    ###########################################################################
+    # Plan 2 - set goal state with PoseStamped message
+    ###########################################################################
+
+    # set pose goal with PoseStamped message
+    from tf_transformations import quaternion_from_euler
+    from math import pi
+
+
+    pose_goal = PoseStamped()
+    orient = quaternion_from_euler(pi, 0, 0)
+    pose_goal.header.frame_id = "world"
+    pose_goal.pose.orientation.x = orient[0]
+    pose_goal.pose.orientation.y = orient[1]
+    pose_goal.pose.orientation.z = orient[2]
+    pose_goal.pose.orientation.w = orient[3]
+    pose_goal.pose.position.x = 0.4
+    pose_goal.pose.position.y = 0.0
+    pose_goal.pose.position.z = 0.85
+
+    # call Oscar method
+    logger.info('Moving to goal pose and openning gripper')
+    pose_goal.pose.position.y=-0.25
+    oscar_moveit_py.arm_go_to_pose('right', pose_goal)
+    oscar_moveit_py.open_gripper('right')
+    pose_goal.pose.position.y=0.25
+    oscar_moveit_py.arm_go_to_pose('left', pose_goal)
+    oscar_moveit_py.open_gripper('left')
+    
+    ###########################################################################
+    # Plan 3 - set states with predefined string
+    ###########################################################################
+
+    logger.info('Moving to pose "home" and closing grippers...')
+    oscar_moveit_py.arm_go_to_named_pose('left', 'home')
+    oscar_moveit_py.arm_go_to_named_pose('right', 'home')
+    oscar_moveit_py.close_gripper('left')
+    oscar_moveit_py.close_gripper('right')
