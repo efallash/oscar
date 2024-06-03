@@ -60,23 +60,18 @@ class Oscar():
     def close_gripper(self, arm, sleep_time=0.1):
         point=JointTrajectoryPoint()
         point.positions=[0.0, 0.0]
-        if arm=='left' or arm=='right':
-            goal_msg=self.gripper_goal_msgs[arm]
-            gripper=self.grippers[arm]
-        else:
-            self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
-            return False
-        assert isinstance(goal_msg, FollowJointTrajectory.Goal)
-        assert isinstance(gripper, ActionClient)
-        goal_msg.trajectory.points=[point]
-        gripper.send_goal_async(goal_msg)
         self.logger.info("Closing gripper")
-        time.sleep(sleep_time)
-        return True
+        future=self.gripper_action(arm, point, sleep_time)
+        return future
 
     def open_gripper(self, arm, sleep_time=0.1):
         point=JointTrajectoryPoint()
         point.positions=[0.02, 0.02]
+        self.logger.info("Opening gripper")
+        future=self.gripper_action(arm, point, sleep_time)
+        return future
+    
+    def gripper_action(self, arm, point:JointTrajectoryPoint, sleep_time):
         if arm=='left' or arm=='right':
             goal_msg=self.gripper_goal_msgs[arm]
             gripper=self.grippers[arm]
@@ -86,12 +81,12 @@ class Oscar():
         assert isinstance(goal_msg, FollowJointTrajectory.Goal)
         assert isinstance(gripper, ActionClient)
         goal_msg.trajectory.points=[point]
-        gripper.send_goal_async(goal_msg)
-        self.logger.info("Opening gripper")
+        future = gripper.send_goal_async(goal_msg)
         time.sleep(sleep_time)
-        return True
+        return future
 
-    def arm_go_to_named_pose(self, arm, pose_name, vel_factor=0.2, sleep_time=0.1): #TODO: Add acceleration and velocity scaling to all methods
+
+    def arm_go_to_named_pose(self, arm: str, pose_name: str, vel_factor=0.2, sleep_time=0.1): #TODO: Add acceleration and velocity scaling to all methods
         if arm=='left' or arm=='right':
             thor_arm=self.arms[arm]
         else:
@@ -103,7 +98,7 @@ class Oscar():
         self.logger.info(f"Moving to pose: {pose_name}")
         return self.plan_and_execute(self.oscar, thor_arm, self.logger, vel_factor=vel_factor, sleep_time=sleep_time)
 
-    def arm_go_to_pose(self, arm, pose: PoseStamped, vel_factor=0.2, sleep_time=0.1):
+    def arm_go_to_pose(self, arm: str, pose: PoseStamped, vel_factor=0.2, sleep_time=0.1):
         if arm=='left' or arm=='right':
             thor_arm=self.arms[arm]
             gripper_link=self.gripper_links[arm]
@@ -169,14 +164,18 @@ class Oscar():
         plan_result=self.plan(planning_component,logger,single_plan_parameters,multi_plan_parameters)
 
         if plan_result:
-            execute_result=self.execute(robot,logger,plan_result, vel_factor, sleep_time)
+            if vel_factor>0:
+                execute_result=self.execute(robot,logger,plan_result, vel_factor, sleep_time)
 
-            if execute_result.status=='SUCCEEDED':
-                logger.info(f'EXECUTION SUCCEEDED')
-                return (True, '')
+                if execute_result.status=='SUCCEEDED':
+                    logger.info(f'EXECUTION SUCCEEDED')
+                    return (True, execute_result.status)
+                else:
+                    logger.error(f'EXECUTION FAILED, code: {execute_result.status}')
+                    return (False, execute_result.status)
             else:
-                logger.error(f'EXECUTION FAILED, code: {execute_result.status}')
-                return (False, execute_result.status)
+                logger.info('Planning Suceeded')
+                return (True, 'PLAN_SUCEEDED')
         else:
             logger.error('Planning failed')
             return (False, 'PLAN_FAILED')

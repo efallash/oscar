@@ -1,0 +1,4 @@
+#Service message to control a gripper
+bool close #Request message: Boolean to close the gripper, open the gripper if false.
+---
+bool object #Response: True if an object is detected in the gripper

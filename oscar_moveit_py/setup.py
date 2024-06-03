@@ -24,7 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'oscar_moveit_py = oscar_moveit_py.oscar_moveit_py:main'
+            'oscar_moveit_py = oscar_moveit_py.oscar_moveit_py:main', 
+            'oscar_commander = oscar_moveit_py.oscar_command_services:main'
         ],
     },
 )
