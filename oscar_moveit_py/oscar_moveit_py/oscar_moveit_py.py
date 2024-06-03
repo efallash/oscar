@@ -13,11 +13,12 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 
 # moveit python library
-from moveit.core.robot_state import RobotState 
+from moveit.core.robot_state import RobotState
+from moveit.core.robot_trajectory import RobotTrajectory
 from moveit.planning import (
     MoveItPy,
-    MultiPipelinePlanRequestParameters, 
-#    TrajectoryExecutionManager
+    PlanningComponent,
+    TrajectoryExecutionManager
 )
 
 
@@ -32,6 +33,10 @@ class Oscar():
         self.logger = get_logger(f'oscar.{name}')
         # instantiate MoveItPy instance and get planning component
         self.oscar = MoveItPy(node_name=name)
+        trajectory_execution = self.oscar.get_trajactory_execution_manager()
+        assert isinstance(trajectory_execution, TrajectoryExecutionManager)
+        trajectory_execution.enable_execution_duration_monitoring(True)
+        trajectory_execution.set_allowed_execution_duration_scaling(1.2)
 
         # Create objects for the arms and grippers
         self.arms = {}
@@ -52,7 +57,7 @@ class Oscar():
         self.gripper_goal_msgs['left'].trajectory.joint_names=['left_arm_finger1_prismatic', 'left_arm_finger2_prismatic']
         self.logger.info("MoveItPy instance created")
 
-    def close_gripper(self, arm, sleep_time=0):
+    def close_gripper(self, arm, sleep_time=0.1):
         point=JointTrajectoryPoint()
         point.positions=[0.0, 0.0]
         if arm=='left' or arm=='right':
@@ -61,13 +66,15 @@ class Oscar():
         else:
             self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
             return False
+        assert isinstance(goal_msg, FollowJointTrajectory.Goal)
+        assert isinstance(gripper, ActionClient)
         goal_msg.trajectory.points=[point]
         gripper.send_goal_async(goal_msg)
         self.logger.info("Closing gripper")
         time.sleep(sleep_time)
         return True
 
-    def open_gripper(self, arm, sleep_time=0):
+    def open_gripper(self, arm, sleep_time=0.1):
         point=JointTrajectoryPoint()
         point.positions=[0.02, 0.02]
         if arm=='left' or arm=='right':
@@ -76,39 +83,43 @@ class Oscar():
         else:
             self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
             return False
+        assert isinstance(goal_msg, FollowJointTrajectory.Goal)
+        assert isinstance(gripper, ActionClient)
         goal_msg.trajectory.points=[point]
         gripper.send_goal_async(goal_msg)
         self.logger.info("Opening gripper")
         time.sleep(sleep_time)
         return True
 
-    def arm_go_to_named_pose(self, arm, pose_name, sleep_time=0): #TODO: Add acceleration and velocity scaling to all methods
+    def arm_go_to_named_pose(self, arm, pose_name, vel_factor=0.2, sleep_time=0.1): #TODO: Add acceleration and velocity scaling to all methods
         if arm=='left' or arm=='right':
             thor_arm=self.arms[arm]
         else:
             self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
             return False
+        assert isinstance(thor_arm, PlanningComponent)
         thor_arm.set_start_state_to_current_state()
         thor_arm.set_goal_state(configuration_name=pose_name)
         self.logger.info(f"Moving to pose: {pose_name}")
-        return self.plan_and_execute(self.oscar, thor_arm, self.logger, sleep_time=sleep_time)
+        return self.plan_and_execute(self.oscar, thor_arm, self.logger, vel_factor=vel_factor, sleep_time=sleep_time)
 
-    def arm_go_to_pose(self, arm, pose: PoseStamped, sleep_time=0):
+    def arm_go_to_pose(self, arm, pose: PoseStamped, vel_factor=0.2, sleep_time=0.1):
         if arm=='left' or arm=='right':
             thor_arm=self.arms[arm]
             gripper_link=self.gripper_links[arm]
         else:
             self.logger.error('Wrong Arm Selected: Arm must be "left" or "right".')
             return False
+        assert isinstance(thor_arm, PlanningComponent)
         thor_arm.set_start_state_to_current_state()
         thor_arm.set_goal_state(pose_stamped_msg=pose, pose_link=gripper_link)
         angles=euler_from_quaternion([pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w])
         self.logger.info(f'Moving to pose x: {pose.pose.position.x} y: {pose.pose.position.y} z: {pose.pose.position.z} r: {angles[0]} p: {angles[1]} y: {angles[2]}')
-        return self.plan_and_execute(self.oscar, thor_arm, self.logger, sleep_time=sleep_time)
+        return self.plan_and_execute(self.oscar, thor_arm, self.logger, vel_factor=vel_factor, sleep_time=sleep_time)
 
 
     def plan(self,
-        planning_component,
+        planning_component: PlanningComponent,
         logger,
         single_plan_parameters=None,
         multi_plan_parameters=None
@@ -125,18 +136,21 @@ class Oscar():
                 single_plan_parameters=single_plan_parameters
             )
         else:
-            plan_result = planning_component.plan() #TODO: Add moveit.planning.PlanRequestParameters to control 
+            plan_result = planning_component.plan()
         return plan_result
 
     def execute(self,
         robot: MoveItPy,
         logger,
         plan_result,
+        vel_factor=1,
         sleep_time=0.0        
         ):
         # execute the plan
         logger.info("Executing plan")
         robot_trajectory = plan_result.trajectory
+        assert isinstance(robot_trajectory, RobotTrajectory)
+        robot_trajectory.apply_totg_time_parameterization(vel_factor, 1.0)
         result=robot.execute(robot_trajectory, controllers=[])
         time.sleep(sleep_time)
         return result
@@ -147,6 +161,7 @@ class Oscar():
         logger,
         single_plan_parameters=None,
         multi_plan_parameters=None,
+        vel_factor=1,
         sleep_time=0.0,
     ):
 
@@ -154,25 +169,20 @@ class Oscar():
         plan_result=self.plan(planning_component,logger,single_plan_parameters,multi_plan_parameters)
 
         if plan_result:
-            execute_result=self.execute(robot,logger,plan_result,sleep_time)
-        else:
-            logger.error('Planning failed')
-            return (False, 'PLAN_FAILED')
-
-        if execute_result:
+            execute_result=self.execute(robot,logger,plan_result, vel_factor, sleep_time)
 
             if execute_result.status=='SUCCEEDED':
                 logger.info(f'EXECUTION SUCCEEDED')
                 return (True, '')
-
-            elif execute_result.status=='RUNNING': #TODO: Fix this so that execution can be properly awaited: Requires moveit.planning.TrajectoryExecutionManager
-                logger.info(f'EXECUTING')
-                time.sleep(2)
-                return (False, 'EXCEED_EXEC_TIME')
             else:
-
                 logger.error(f'EXECUTION FAILED, code: {execute_result.status}')
                 return (False, execute_result.status)
+        else:
+            logger.error('Planning failed')
+            return (False, 'PLAN_FAILED')
+
+
+
     def shutdown(self):
         self.thor.shutdown()
 
@@ -185,7 +195,7 @@ def main():
     rclpy.init()
     node=Node('oscar_test_node')
     oscar_moveit_py=Oscar(node)
-    logger=node.get_logger()
+    logger=get_logger('oscar_test_node')
     spin_thread=threading.Thread(target=rclpy.spin, args=(node,))
     spin_thread.start()
     ###########################################################################
@@ -236,3 +246,10 @@ def main():
     oscar_moveit_py.arm_go_to_named_pose('right', 'home')
     oscar_moveit_py.close_gripper('left')
     oscar_moveit_py.close_gripper('right')
+
+    try:
+        while True:
+            pass
+    except:
+        spin_thread.join()
+

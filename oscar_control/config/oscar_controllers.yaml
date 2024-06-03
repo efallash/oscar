@@ -31,6 +31,27 @@ left_arm_controller:
       - position
       - velocity
 
+    constraints:
+      goal_time: 0.5
+      stopped_velocity_tolerance: 0.5
+      left_arm_Art1_Yaw:
+        goal: 0.1 
+        trajectory: 0.1
+      left_arm_Art2_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      left_arm_Art3_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      left_arm_Art4_Yaw:
+        goal: 0.1
+        trajectory: 0.1
+      left_arm_Art5_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      left_arm_Art6_Yaw:
+        goal: 0.1
+        trajectory: 0.1
 
     gains:
       left_arm_Art1_Yaw: {p: 1000.0, i: 0.0, d: 5.0, i_clamp: 100.0}
@@ -90,6 +111,27 @@ right_arm_controller:
       - position
       - velocity
 
+    constraints:
+      goal_time: 0.5
+      stopped_velocity_tolerance: 0.5
+      right_arm_Art1_Yaw:
+        goal: 0.1 
+        trajectory: 0.1
+      right_arm_Art2_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      right_arm_Art3_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      right_arm_Art4_Yaw:
+        goal: 0.1
+        trajectory: 0.1
+      right_arm_Art5_Pitch:
+        goal: 0.1
+        trajectory: 0.1
+      right_arm_Art6_Yaw:
+        goal: 0.1
+        trajectory: 0.1
 
     gains:
       right_arm_Art1_Yaw: {p: 1000.0, i: 0.0, d: 5.0, i_clamp: 100.0}
