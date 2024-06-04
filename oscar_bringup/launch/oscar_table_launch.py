@@ -93,6 +93,10 @@ def generate_launch_description():
     controllers_launch_path=os.path.join(get_package_share_directory('oscar_control'), 'launch', 'oscar_control_launch.py')
     load_controllers= IncludeLaunchDescription(PythonLaunchDescriptionSource(controllers_launch_path))
 
+    #Launch Oscar commander
+    oscar_commander_path=os.path.join(get_package_share_directory('oscar_moveit_py'), 'launch', 'oscar_command_services.launch.py')
+    oscar_commander=IncludeLaunchDescription(PythonLaunchDescriptionSource(oscar_commander_path))
+
 
     ld= LaunchDescription()
     ld.add_action(set_env_vars_resources_gripper)
@@ -104,5 +108,6 @@ def generate_launch_description():
     ld.add_action(node_robot_state_publisher)
     ld.add_action(spawn_entity)
     ld.add_action(load_controllers)
+    ld.add_action(oscar_commander)
 
     return ld

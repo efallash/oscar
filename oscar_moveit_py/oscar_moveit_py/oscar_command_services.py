@@ -7,10 +7,8 @@ from tf_transformations import quaternion_from_euler
 from rclpy.node import Node
 from oscar_moveit_py.oscar_moveit_py import Oscar
 
-from oscar_interfaces.srv import ArmControl
-from oscar_interfaces.srv import GripperControl
+from oscar_interfaces.srv import ArmControl, GripperControl
 from geometry_msgs.msg import PoseStamped
-from control_msgs.msg import JointTrajectoryControllerState
 from moveit.planning import PlanRequestParameters, PlanningComponent
 
 
