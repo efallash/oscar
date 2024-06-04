@@ -11,6 +11,7 @@ import rclpy
 from rclpy.logging import get_logger
 from rclpy.node import Node
 from rclpy.action import ActionClient
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 
 # moveit python library
 from moveit.core.robot_state import RobotState
@@ -49,8 +50,9 @@ class Oscar():
         self.arms['left'] = self.oscar.get_planning_component("left_arm")
         self.gripper_links['right'] = 'right_arm_gripper_link'
         self.gripper_links['left'] = 'left_arm_gripper_link'
-        self.grippers['right'] = ActionClient(node, FollowJointTrajectory, '/right_gripper_controller/follow_joint_trajectory')
-        self.grippers['left'] = ActionClient(node, FollowJointTrajectory, '/left_gripper_controller/follow_joint_trajectory')
+        self.cbg = MutuallyExclusiveCallbackGroup()
+        self.grippers['right'] = ActionClient(node, FollowJointTrajectory, '/right_gripper_controller/follow_joint_trajectory', callback_group=self.cbg)
+        self.grippers['left'] = ActionClient(node, FollowJointTrajectory, '/left_gripper_controller/follow_joint_trajectory', callback_group=self.cbg)
         self.gripper_goal_msgs['right']=FollowJointTrajectory.Goal()
         self.gripper_goal_msgs['left']=FollowJointTrajectory.Goal()
         self.gripper_goal_msgs['right'].trajectory.joint_names=['right_arm_finger1_prismatic', 'right_arm_finger2_prismatic']
