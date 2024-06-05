@@ -61,7 +61,7 @@ class ChangeHandsTest(Node):
             x=0.4, y=-0.35, z=0.8, vel=0.2, named_pose=""
         )
         pose_place_right = ArmControl.Request(
-            x=0.25, y=0.0, z=0.85, vel=0.2, named_pose=""
+            x=0.25, y=0.0, z=0.82, vel=0.2, named_pose=""
         )
         pose_pre_pick_right = ArmControl.Request(
             x=0.4, y=-0.35, z=0.9, vel=0.2, named_pose=""
@@ -75,7 +75,7 @@ class ChangeHandsTest(Node):
             x=0.25, y=0.0, z=0.8, vel=0.2, named_pose=""
         )
         pose_place_left = ArmControl.Request(
-            x=0.4, y=0.35, z=0.85, vel=0.2, named_pose=""
+            x=0.4, y=0.35, z=0.82, vel=0.2, named_pose=""
         )
         pose_pre_pick_left = ArmControl.Request(
             x=0.25, y=0.0, z=0.9, vel=0.2, named_pose=""

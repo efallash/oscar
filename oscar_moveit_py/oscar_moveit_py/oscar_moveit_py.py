@@ -38,6 +38,7 @@ class Oscar():
         assert isinstance(trajectory_execution, TrajectoryExecutionManager)
         trajectory_execution.enable_execution_duration_monitoring(True)
         trajectory_execution.set_allowed_execution_duration_scaling(1.2)
+        trajectory_execution.set_allowed_start_tolerance(0.05)
 
         # Create objects for the arms and grippers
         self.arms = {}
