@@ -177,7 +177,7 @@ class ChangeHandsTest(Node):
         self.get_logger().info("Left Home")
         await self.call_service(self.cli_left_arm, pose_home)
 
-        # Pre Place Position
+         # Pre Place Position
         self.get_logger().info("Left Pre Place")
         await self.call_service(self.cli_left_arm, pose_pre_place_left)
 
@@ -195,7 +195,7 @@ class ChangeHandsTest(Node):
 
         # Home
         self.get_logger().info("Left Home")
-        await self.call_service(self.cli_left_arm, pose_home)
+        await self.call_service(self.cli_left_arm, pose_home) 
 
         # SCRIPT END
 
