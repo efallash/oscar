@@ -70,9 +70,10 @@ class OscarCommander(Node):
     def arm_command(self, request: ArmControl.Request, arm):
         # Check if velocity command is in allowed values
         if request.vel > 0 and request.vel <= 1:
+            self.get_logger().info("Executing requested command")
             execute = True  # Flag for execution
         else:
-            self.get_logger().error("Wrong Velocity Factor")
+            self.get_logger().info("Planning requested command")
             execute = False
 
         # If a named pose is commanded
