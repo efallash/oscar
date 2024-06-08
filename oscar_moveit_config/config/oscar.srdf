@@ -71,7 +71,7 @@
         <joint name="right_arm_Art3_Pitch" value="0.7393236621158183"/>
         <joint name="right_arm_Art4_Yaw" value="0.8737903663403516"/>
         <joint name="right_arm_Art5_Pitch" value="0.9512267668677589"/>
-        <joint name="right_arm_Art6_Yaw" value="4.105971187052884"/>
+        <joint name="right_arm_Art6_Yaw" value="0.964378533"/>
     </group_state>
     <group_state name="pre_switch_collect" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0.6460016064545374"/>
@@ -79,7 +79,7 @@
         <joint name="right_arm_Art3_Pitch" value="0.9531994535243485"/>
         <joint name="right_arm_Art4_Yaw" value="1.1018132661905757"/>
         <joint name="right_arm_Art5_Pitch" value="1.108349588811049"/>
-        <joint name="right_arm_Art6_Yaw" value="3.9918719636210382"/>
+        <joint name="right_arm_Art6_Yaw" value="0.85027931"/>
     </group_state>
     <group_state name="switch_give" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0.8969325302943776"/>
@@ -87,7 +87,7 @@
         <joint name="right_arm_Art3_Pitch" value="0.7393236621158183"/>
         <joint name="right_arm_Art4_Yaw" value="0.8737903663403516"/>
         <joint name="right_arm_Art5_Pitch" value="0.9512267668677589"/>
-        <joint name="right_arm_Art6_Yaw" value="2.53517486"/>
+        <joint name="right_arm_Art6_Yaw" value="-0.606417794"/>
     </group_state>
     <group_state name="post_switch_give" group="right_arm">
         <joint name="right_arm_Art1_Yaw" value="0.6460016064545374"/>
@@ -95,7 +95,7 @@
         <joint name="right_arm_Art3_Pitch" value="0.9531994535243485"/>
         <joint name="right_arm_Art4_Yaw" value="1.1018132661905757"/>
         <joint name="right_arm_Art5_Pitch" value="1.108349588811049"/>
-        <joint name="right_arm_Art6_Yaw" value="2.421075637"/>
+        <joint name="right_arm_Art6_Yaw" value="-0.720517017"/>
     </group_state>
     <group_state name="switch_give" group="left_arm">
         <joint name="left_arm_Art1_Yaw" value="-0.8967881121299165"/>
@@ -103,7 +103,7 @@
         <joint name="left_arm_Art3_Pitch" value="0.738893223675821"/>
         <joint name="left_arm_Art4_Yaw" value="-0.8740896640661895"/>
         <joint name="left_arm_Art5_Pitch" value="0.9518139630622138"/>
-        <joint name="left_arm_Art6_Yaw" value="-2.536013297623155"/>
+        <joint name="left_arm_Art6_Yaw" value="0.605579356"/>
     </group_state>
     <group_state name="post_switch_give" group="left_arm">
         <joint name="left_arm_Art1_Yaw" value="-0.6457507281767881"/>
@@ -111,7 +111,7 @@
         <joint name="left_arm_Art3_Pitch" value="0.9525172817951881"/>
         <joint name="left_arm_Art4_Yaw" value="-1.101429541412672"/>
         <joint name="left_arm_Art5_Pitch" value="1.109008670516036"/>
-        <joint name="left_arm_Art6_Yaw" value="-2.4200419257857213"/>
+        <joint name="left_arm_Art6_Yaw" value="0.721550728"/>
     </group_state>
     <group_state name="switch_collect" group="left_arm">
         <joint name="left_arm_Art1_Yaw" value="-0.8967881121299165"/>
@@ -119,7 +119,7 @@
         <joint name="left_arm_Art3_Pitch" value="0.738893223675821"/>
         <joint name="left_arm_Art4_Yaw" value="-0.8740896640661895"/>
         <joint name="left_arm_Art5_Pitch" value="0.9518139630622138"/>
-        <joint name="left_arm_Art6_Yaw" value="-4.106809624"/>
+        <joint name="left_arm_Art6_Yaw" value="-0.96521697"/>
     </group_state>
     <group_state name="pre_switch_collect" group="left_arm">
         <joint name="left_arm_Art1_Yaw" value="-0.6457507281767881"/>
@@ -127,7 +127,7 @@
         <joint name="left_arm_Art3_Pitch" value="0.9525172817951881"/>
         <joint name="left_arm_Art4_Yaw" value="-1.101429541412672"/>
         <joint name="left_arm_Art5_Pitch" value="1.109008670516036"/>
-        <joint name="left_arm_Art6_Yaw" value="-3.990838253"/>
+        <joint name="left_arm_Art6_Yaw" value="-0.849245599"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="left_gripper" parent_link="left_arm_gripper_link" group="left_arm"/>
