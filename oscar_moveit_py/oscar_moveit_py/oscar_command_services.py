@@ -36,7 +36,7 @@ class OscarCommander(Node):
     def left_arm_callback(
         self, request: ArmControl.Request, response: ArmControl.Response
     ):
-        self.get_logger().info("Left arm command received")
+        self.get_logger().info(f"Left arm command received (x= {request.x}, y= {request.y}, z= {request.z}, vel= {request.vel}, pose= {request.named_pose})")
         success, status = self.arm_command(request, arm="left")
         response.success = success
         response.status = status
@@ -45,7 +45,7 @@ class OscarCommander(Node):
     def right_arm_callback(
         self, request: ArmControl.Request, response: ArmControl.Response
     ):
-        self.get_logger().info("Right arm command received")
+        self.get_logger().info(f"Right arm command received (x= {request.x}, y= {request.y}, z= {request.z}, vel= {request.vel}, pose= {request.named_pose})")
         success, status = self.arm_command(request, arm="right")
         response.success = success
         response.status = status
