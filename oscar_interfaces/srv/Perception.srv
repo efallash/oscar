@@ -1,0 +1,7 @@
+#Service message to respond when perceptual state is requested
+---
+#Send points in WORLD reference frame
+geometry_msgs/Point red_object
+geometry_msgs/Point basket
+bool obj_in_left_hand
+bool obj_in_right_hand

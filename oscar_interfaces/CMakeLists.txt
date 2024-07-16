@@ -17,6 +17,7 @@ find_package(geometry_msgs REQUIRED)
 set(srv_files
   "srv/ArmControl.srv"
   "srv/GripperControl.srv"
+  "srv/Perception.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
