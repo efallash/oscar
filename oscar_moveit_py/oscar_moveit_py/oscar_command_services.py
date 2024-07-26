@@ -40,6 +40,7 @@ class OscarCommander(Node):
         success, status = self.arm_command(request, arm="left")
         response.success = success
         response.status = status
+        self.get_logger().info(f"Left arm command response (success= {success}, status= {status})")
         return response
 
     def right_arm_callback(
@@ -49,6 +50,7 @@ class OscarCommander(Node):
         success, status = self.arm_command(request, arm="right")
         response.success = success
         response.status = status
+        self.get_logger().info(f"Right arm command response (success= {success}, status= {status})")
         return response
 
     async def left_gripper_callback(
