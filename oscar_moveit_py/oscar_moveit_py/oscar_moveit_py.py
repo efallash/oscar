@@ -34,7 +34,7 @@ class Oscar():
         self.logger = get_logger(f'oscar.{name}')
         # instantiate MoveItPy instance and get planning component
         self.oscar = MoveItPy(node_name=name)
-        trajectory_execution = self.oscar.get_trajactory_execution_manager()
+        trajectory_execution = self.oscar.get_trajectory_execution_manager()
         assert isinstance(trajectory_execution, TrajectoryExecutionManager)
         trajectory_execution.enable_execution_duration_monitoring(True)
         trajectory_execution.set_allowed_execution_duration_scaling(1.2)
